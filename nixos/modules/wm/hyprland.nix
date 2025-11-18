@@ -11,14 +11,11 @@
   # Install required system packages for Hyprland
   environment.systemPackages = with pkgs; [
     # For GPU stats and management
-    glxinfo
-    
+    mesa-demos
+
     # For power management
     powertop
 
-    # Application launcher
-    rofi-wayland
-    
     # Status bar
     waybar
 
@@ -51,21 +48,29 @@
     enable = true;
     extraPortals = with pkgs; [
       xdg-desktop-portal-gtk
-    ];
-    wlr.enable = true;
+      xdg-desktop-portal-hyprland
+    ];    
+    config.common.default = "*";
   };
 
   # Set environment variables for Wayland
   environment.sessionVariables = {
-    NIXOS_OZONE_WL = "1";
-    MOZ_ENABLE_WAYLAND = "1";
-    WLR_NO_HARDWARE_CURSORS = "1";
+    # Essential Wayland variables
     XDG_SESSION_TYPE = "wayland";
     XDG_SESSION_DESKTOP = "Hyprland";
+    XDG_CURRENT_DESKTOP = "Hyprland";
+    
+    # Application compatibility
+    MOZ_ENABLE_WAYLAND = "1";
     QT_QPA_PLATFORM = "wayland;xcb";
     QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
     GDK_BACKEND = "wayland,x11";
-    HYPRLAND_LOG_WLR = "1";
+    
+    # NVIDIA-specific (only essential ones)
+    WLR_NO_HARDWARE_CURSORS = "1";
+    
+    # Reduce logging for stability
+    HYPRLAND_LOG_WLR = "0";
   };
 
   # Auto-start Polkit agent

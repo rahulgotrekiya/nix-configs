@@ -12,7 +12,7 @@
     hyprpaper
     pyprland
     hyprpicker
-    rofi-wayland
+    rofi
     brightnessctl
     pulseaudio # For pactl
     playerctl

@@ -16,7 +16,6 @@
   
   environment.sessionVariables = {
     XDG_SESSION_TYPE = "wayland";
-    XDG_CURRENT_DESKTOP = "GNOME";
     GDK_BACKEND = "wayland,x11";
 };
 
@@ -28,7 +27,7 @@
   '';
 
   environment.gnome.excludePackages = with pkgs; [
-    # orca
+    orca
     # evince
     # file-roller
     geary

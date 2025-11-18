@@ -69,11 +69,6 @@
         preserve_split = true;
       };
       
-      # Gesture configuration
-      gestures = {
-        workspace_swipe = true;
-      };
-      
       # Misc configuration
       misc = {
         disable_hyprland_logo = true;
@@ -117,6 +112,13 @@
       env = QT_WAYLAND_DISABLE_WINDOWDECORATION,1
       env = MOZ_ENABLE_WAYLAND,1
       env = NIXOS_OZONE_WL,1
+
+
+      # Gesture configuration
+      gesture = 3, horizontal, workspace
+      gesture = 3, down, mod: ALT, close
+      gesture = 3, up, mod: SUPER, scale: 1.5, fullscreen
+      gesture = 2, pinchin, scale: 1.5, float
     '';
   };
 }

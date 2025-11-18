@@ -18,7 +18,7 @@
     # Password manager
     pass
     gnupg
-    pinentry
+    pinentry-tty
 
     # Other
     obsidian

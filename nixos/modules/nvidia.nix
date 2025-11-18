@@ -9,8 +9,8 @@
     extraPackages = with pkgs; [
       nvidia-vaapi-driver
       intel-media-driver    # LIBVA_DRIVER_NAME=iHD
-      vaapiIntel            # LIBVA_DRIVER_NAME=i965 (older but can be more stable)
-      vaapiVdpau
+      intel-vaapi-driver
+      libva-vdpau-driver
       libvdpau-va-gl
     ];
   };
