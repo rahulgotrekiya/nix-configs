@@ -14,6 +14,7 @@
     bibata-cursors
     dosbox
     gcc
+    docker-compose
   ];
 
   # Install firefox.

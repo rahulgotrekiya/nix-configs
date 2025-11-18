@@ -15,5 +15,7 @@
     ./battery-monitor.nix
     ./desktop    
     ./lamp.nix
+    ./vm.nix
+    ./docker.nix
   ];
 }
