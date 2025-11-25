@@ -136,10 +136,6 @@ label {
     box-shadow: 0px 0px 8px 0 rgba(0, 0, 0, 0.5);
 }
 
-.blank-window {
-    background: alpha(black, 0.2);
-}
-
 .control-center-list {
     background: @crust;
     min-height: 5px;
