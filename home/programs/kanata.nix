@@ -32,7 +32,7 @@
     )
 
     (defsrc
-      caps tab a s d f g h j k l ; ralt
+      caps a s d f g h j k l ; ralt
     )
 
     (defvar
@@ -59,11 +59,11 @@
     )
 
     (deflayer base
-      @escctrl tab @a-mod @s-mod @d-mod @f-mod g h @j-mod @k-mod @l-mod @;-mod @navtoggle
+      @escctrl @a-mod @s-mod @d-mod @f-mod g h @j-mod @k-mod @l-mod @;-mod @navtoggle
     )
 
     (deflayer navigation
-      @escctrl @tobase @a-mod @s-mod @d-mod @f-mod g left down up right ; @navtoggle
+      caps @a-mod @s-mod @d-mod @f-mod g left down up right ; @tobase
     )
   '';
 }
