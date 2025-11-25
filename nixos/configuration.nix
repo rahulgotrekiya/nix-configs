@@ -12,7 +12,7 @@
 
   # Enable battery monitoring service with enhanced features
   services.battery-monitor = {
-    enable = false;
+    enable = true;
     normalLevels = [ 30 20 15 ];  # Notification at these levels
     criticalLevel = 10;           # Continuous notifications below this level
     criticalIntervalSeconds = 1;  # Send notification every 1 second when critical

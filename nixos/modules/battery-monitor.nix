@@ -7,31 +7,31 @@ let
 in {
   options.services.battery-monitor = {
     enable = mkEnableOption "Battery level monitoring service";
-    
+
     normalLevels = mkOption {
       type = types.listOf types.int;
       default = [ 30 20 15 ];
       description = "Battery levels at which to show normal notifications";
     };
-    
+
     criticalLevel = mkOption {
       type = types.int;
       default = 10;
       description = "Battery level below which to show continuous critical notifications";
     };
-    
+
     criticalIntervalSeconds = mkOption {
       type = types.int;
       default = 1;
       description = "Interval between critical notifications in seconds";
     };
-    
+
     hibernateLevel = mkOption {
       type = types.nullOr types.int;
       default = 5;
-      description = "Battery level at which to hibernate the system (null to disable)";
+      description = "Battery level at which to hibernate the system (null to disable). Note: enable/handling of hibernate is separate from this module.";
     };
-    
+
     chargerNotifications = mkOption {
       type = types.bool;
       default = true;
@@ -40,123 +40,136 @@ in {
   };
 
   config = mkIf cfg.enable {
-    # Ensure power management and notification services are enabled
     services.upower.enable = true;
-    
-    # Create battery monitoring user service
+
     systemd.user.services.battery-monitor = {
       description = "Battery level monitoring service";
       wantedBy = [ "default.target" ];
+
       serviceConfig = {
-        ExecStart = "${pkgs.writeScript "battery-monitor.sh" ''
+        ExecStart = "${pkgs.writeScript "battery-monitor.sh" '' 
           #!${pkgs.bash}/bin/bash
-          
-          PATH=${lib.makeBinPath (with pkgs; [
-            libnotify
-            upower
-            coreutils
-            gnugrep
-          ])}
-          
-          LAST_NOTIFICATION_LEVEL=100
+
+          PATH=${lib.makeBinPath (with pkgs; [ libnotify upower coreutils gnugrep gawk ])}
+
           NORMAL_LEVELS="${concatStringsSep " " (map toString cfg.normalLevels)}"
           CRITICAL_LEVEL=${toString cfg.criticalLevel}
           CRITICAL_INTERVAL=${toString cfg.criticalIntervalSeconds}
           CHARGER_NOTIFICATIONS=${toString (if cfg.chargerNotifications then "true" else "false")}
-          
-          # Keep track of previous charging state
+
+          LAST_NOTIFICATION_LEVEL=100
           PREV_CHARGING_STATE="unknown"
-          
-          # Function to check if a level is in our normal notification list
-          contains_level() {
-            for level in $NORMAL_LEVELS; do
-              if [ "$level" -eq "$1" ]; then
-                return 0
-              fi
-            done
-            return 1
+
+          FULL_NOTICE_SENT=false
+          ALMOST_FULL_SENT=false
+
+          CRITICAL_REPLACE_ID=9999  # same ID so all critical notifications get replaced instead of stacking
+
+          detect_state() {
+            STATE=$(upower -i $(upower -e | grep -m1 -E 'BAT|battery') 2>/dev/null \
+              | grep "state" | awk '{print $2}')
+
+            case "$STATE" in
+              charging|fully-charged|pending-charge) echo "charging" ;;
+              discharging|pending-discharge) echo "discharging" ;;
+              *) echo "unknown" ;;
+            esac
           }
-          
-          echo "Battery monitoring service started"
-          echo "Normal notification levels: $NORMAL_LEVELS"
-          echo "Critical level: $CRITICAL_LEVEL"
-          echo "Critical notification interval: $CRITICAL_INTERVAL seconds"
-          echo "Charger notifications: $CHARGER_NOTIFICATIONS"
-          
+
+          echo "Battery monitor started."
+
           while true; do
-            # Get battery percentage and state
-            BATTERY_INFO=$(upower -i /org/freedesktop/UPower/devices/battery_BAT0)
-            BATTERY_PCT=$(echo "$BATTERY_INFO" | grep percentage | grep -o "[0-9]\+" || echo "100")
-            
-            # Determine charging state
-            if echo "$BATTERY_INFO" | grep -q "state: *charging"; then
-              CHARGING="charging"
-            elif echo "$BATTERY_INFO" | grep -q "state: *fully-charged"; then
-              CHARGING="full"
-            else
-              CHARGING="discharging"
-            fi
-            
-            # Detect charger connection/disconnection
-            if [ "$CHARGER_NOTIFICATIONS" = "true" ] && [ "$PREV_CHARGING_STATE" != "unknown" ] && [ "$PREV_CHARGING_STATE" != "$CHARGING" ]; then
+
+            BATTERY_DEV=$(upower -e | grep -m1 -E 'BAT|battery')
+            [ -z "$BATTERY_DEV" ] && sleep 5 && continue
+
+            INFO=$(upower -i "$BATTERY_DEV")
+            BATTERY_PCT=$(echo "$INFO" | grep percentage | grep -o "[0-9]\+" )
+            CHARGING=$(detect_state)
+
+            # ------------------------------
+            # 🔌 Charger connect/disconnect alerts
+            # ------------------------------
+            if [ "$CHARGER_NOTIFICATIONS" = "true" ] && [ "$PREV_CHARGING_STATE" != "unknown" ] \
+              && [ "$CHARGING" != "$PREV_CHARGING_STATE" ]; then
+
               if [ "$CHARGING" = "charging" ]; then
+                # Clear critical spam immediately
+                notify-send --close=$CRITICAL_REPLACE_ID 2>/dev/null || true
                 notify-send -u low "Charger Connected" "Battery is now charging ($BATTERY_PCT%)" -i battery-good-charging
-              elif [ "$PREV_CHARGING_STATE" = "charging" ] || [ "$PREV_CHARGING_STATE" = "full" ]; then
-                notify-send -u low "Charger Disconnected" "Running on battery power ($BATTERY_PCT%)" -i battery-good
+                LAST_NOTIFICATION_LEVEL=100
+              else
+                notify-send -u low "Charger Disconnected" "Running on battery ($BATTERY_PCT%)" -i battery-good
+                FULL_NOTICE_SENT=false
+                ALMOST_FULL_SENT=false
               fi
             fi
+
             PREV_CHARGING_STATE="$CHARGING"
-            
-            # Handle battery level notifications
-            if [ "$CHARGING" = "discharging" ]; then
-              echo "Battery at $BATTERY_PCT%, discharging"
-              
-              # Critical notifications
-              if [ "$BATTERY_PCT" -le "$CRITICAL_LEVEL" ]; then
-                notify-send -u critical "Battery Critical!" "Battery level at $BATTERY_PCT%. Connect charger immediately!" -i battery-empty
-                sleep "$CRITICAL_INTERVAL"
-                continue
+
+            # ------------------------------
+            # 🔋 FULL CHARGE NOTIFICATIONS
+            # ------------------------------
+            if [ "$CHARGING" = "charging" ]; then
+
+              if [ "$BATTERY_PCT" -ge 95 ] && [ "$ALMOST_FULL_SENT" = false ]; then
+                notify-send -u low -i battery-full "Battery Almost Full" "Battery reached 95%"
+                ALMOST_FULL_SENT=true
               fi
-              
-              # Normal notifications when crossing thresholds
-              for level in $NORMAL_LEVELS; do
-                if [ "$BATTERY_PCT" -le "$level" ] && [ "$LAST_NOTIFICATION_LEVEL" -gt "$level" ]; then
-                  echo "Triggering notification for level $level"
-                  
-                  # Determine urgency based on level
+
+              if [ "$BATTERY_PCT" -ge 100 ] && [ "$FULL_NOTICE_SENT" = false ]; then
+                notify-send -u normal -i battery-full-charged "Battery Fully Charged" "You can remove the charger now."
+                FULL_NOTICE_SENT=true
+              fi
+
+              sleep 1
+              continue
+            fi
+
+            # If discharging, reset full alerts
+            FULL_NOTICE_SENT=false
+            ALMOST_FULL_SENT=false
+
+            # ------------------------------
+            # ⚠️ CRITICAL BATTERY WARNINGS (continuous)
+            # ------------------------------
+            if [ "$BATTERY_PCT" -le "$CRITICAL_LEVEL" ]; then
+              notify-send -u critical -r $CRITICAL_REPLACE_ID \
+                "Battery Critical!" "Battery at $BATTERY_PCT%. Connect charger now!" \
+                -i battery-empty
+              sleep "$CRITICAL_INTERVAL"
+              continue
+            fi
+
+            # ------------------------------
+            # 🔋 NORMAL LEVEL NOTIFICATIONS
+            # ------------------------------
+            if [ "$CHARGING" = "discharging" ]; then
+              for LEVEL in $NORMAL_LEVELS; do
+                if [ "$BATTERY_PCT" -le "$LEVEL" ] && [ "$LAST_NOTIFICATION_LEVEL" -gt "$LEVEL" ]; then
+                  ICON="battery-good"
                   URGENCY="low"
-                  if [ "$level" -le 15 ]; then
+
+                  if [ "$LEVEL" -le 20 ]; then
+                    ICON="battery-low"
                     URGENCY="normal"
                   fi
-                  
-                  # Determine icon based on level
-                  ICON="battery-good"
-                  if [ "$level" -le 20 ]; then
-                    ICON="battery-low"
-                  fi
-                  
-                  notify-send -u "$URGENCY" "Battery Notice" "Battery level at $BATTERY_PCT%" -i "$ICON"
+
+                  notify-send -u "$URGENCY" "Battery Notice" "Battery at $BATTERY_PCT%" -i "$ICON"
                   LAST_NOTIFICATION_LEVEL="$BATTERY_PCT"
                   break
                 fi
               done
-            else
-              echo "Battery at $BATTERY_PCT%, $CHARGING"
-              # Reset notification level when charging
-              LAST_NOTIFICATION_LEVEL=100
             fi
-            
-            sleep 1  # Check frequently to catch charger connect/disconnect events
+
+            sleep 1
           done
         ''}";
         Restart = "always";
       };
     };
-    
-    # Optional: Configure suspend on critical battery level
-    services.logind.extraConfig = mkIf (cfg.hibernateLevel != null) ''
-      HandleCriticalPowerLevel=hibernate
-      CriticalPowerLevel=${toString cfg.hibernateLevel}
-    '';
+
+    # NOTE: we intentionally do NOT write to services.logind here to avoid type mismatches
+    # and because hibernation/critical-power action is usually handled by UPower.
   };
 }
