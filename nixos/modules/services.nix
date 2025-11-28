@@ -41,18 +41,4 @@
       enableOnBoot = false;
     };
   };
-
-  # syncthing for sync folder with pixel
-  services.syncthing = {
-    enable = true;
-    user = "rahul";
-    dataDir = config.users.users.rahul.home + "/Sync";
-    openDefaultPorts = true;
-  };
-
-  # jellyfin
-  services.jellyfin = {
-    enable = true;
-    openFirewall = true;
-  };
 }
