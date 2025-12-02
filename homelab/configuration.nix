@@ -10,6 +10,7 @@
     ./hardware-configuration.nix
     ./modules/docker.nix
     ./modules/media-server.nix
+    ./modules/networking.nix
   ];
 
   nix = {
