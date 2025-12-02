@@ -11,10 +11,8 @@
   ];
 
   nix = {
-    package = pkgs.nixFlakes;
-    extraOptions = ''
-      experimental-features = nix-command flakes
-    '';
+ 	package = pkgs.nix;
+  	settings.experimental-features = [ "nix-command" "flakes" ];
   };
 
   # Use the systemd-boot EFI boot loader
@@ -25,6 +23,27 @@
   # Pick only one of the below networking options
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant
   networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default
+  
+  services.logind.settings = {
+    Login = {
+      HandleLidSwitch = "ignore";
+      HandleLidSwitchExternalPower = "ignore";
+      HandleLidSwitchDocked = "ignore";
+    };
+  };
+
+  systemd.sleep.extraConfig = ''
+    AllowSuspend=no
+    AllowHibernation=no
+    AllowHybridSleep=no
+    AllowSuspendThenHibernate=no
+  '';
+
+  boot.kernelParams = [
+    "nvme.noacpi=1"
+    "nvme_core.default_ps_max_latency_us=0"
+  ];
+
 
   # Set your time zone
   time.timeZone = "Asia/Kolkata";
@@ -50,6 +69,7 @@
   # List packages installed in system profile
   environment.systemPackages = with pkgs; [
     neovim
+    btop
     cifs-utils
     nfs-utils
     git
