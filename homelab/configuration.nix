@@ -8,6 +8,7 @@
   imports = [
     # Include the results of the hardware scan
     ./hardware-configuration.nix
+    ./modules/docker.nix
   ];
 
   nix = {
@@ -58,7 +59,11 @@
   # Define a user account. Don't forget to set a password with 'passwd'
   users.users.neo = {
     isNormalUser = true;
-    extraGroups = [ "wheel" ]; # Enable 'sudo' for the user
+    extraGroups = [ 
+      "wheel"
+      "docker"
+      "networkmanager"
+    ];
     packages = with pkgs; [
       tree
     ];
@@ -76,6 +81,7 @@
     wget
     htop
     btop
+    docker-compose
   ];
 
   # Enable the OpenSSH daemon
