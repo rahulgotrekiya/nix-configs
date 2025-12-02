@@ -61,6 +61,23 @@
   # Enable the OpenSSH daemon
   services.openssh.enable = true;
 
+  programs.git = {
+    enable = true;
+
+    config = {
+     user = {
+      name = "rahul gotrekiya";
+      email = "121397381+RahulGotrekiya@users.noreply.github.com";
+     };
+
+     init.defaultBranch = "master";
+     pull.rebase = false;
+     push.autoSetupRemote = true;
+
+     core.editor = "nvim";
+    };
+  };
+ 
   # Open ports in the firewall
   # networking.firewall.allowedTCPPorts = [ 80 ];
   # networking.firewall.allowedUDPPorts = [ ... ];
