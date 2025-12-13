@@ -112,6 +112,7 @@
     allowedTCPPorts = [ 
       22    # SSH
       80    # HTTP
+      53    # Blocky
       443   # HTTPS
       8096  # Jellyfin
       8989  # Sonarr
@@ -121,6 +122,7 @@
       6767  # Bazarr
     ];
     allowedUDPPorts = [ 
+      53    # Blocky
     ];
   };
 
