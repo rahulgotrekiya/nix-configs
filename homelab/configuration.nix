@@ -10,6 +10,7 @@
     ./hardware-configuration.nix
     ./modules/docker.nix
     ./modules/media-server.nix
+    ./modules/file-sharing.nix
     ./modules/monitoring.nix
     ./modules/networking.nix
     ./modules/glance.nix
@@ -119,6 +120,7 @@
       53    # Blocky
       443   # HTTPS
       8096  # Jellyfin
+      8384  # Syncthing
       9091  # Transmission
       51413 # Transmission
       8989  # Sonarr
