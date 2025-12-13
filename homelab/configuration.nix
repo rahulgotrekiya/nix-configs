@@ -10,6 +10,7 @@
     ./hardware-configuration.nix
     ./modules/docker.nix
     ./modules/media-server.nix
+    ./modules/monitoring.nix
     ./modules/networking.nix
     ./modules/glance.nix
   ];
@@ -126,6 +127,8 @@
       8686  # Lidarr
       8191  # Flaresolverr
       6767  # Bazarr
+      3000  # Grafana
+      9090  # Prometheus
     ];
     allowedUDPPorts = [ 
       51413 # Transmission
