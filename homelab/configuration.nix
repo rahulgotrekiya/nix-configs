@@ -14,6 +14,7 @@
     ./modules/monitoring.nix
     ./modules/networking.nix
     ./modules/glance.nix
+    ./modules/sops.nix
   ];
 
   nix = {
@@ -72,7 +73,7 @@
     packages = with pkgs; [
       tree
     ];
-    hashedPassword = "$6$ZfLXV/9Kczid8V55$76pdYdfd2yjVmxqYuv82m9ePJJ4GkjdBifsFPi/GNPN2PbwLjfJW8qJZdyFkwjeKDLCCi1YfZlCsr6iOUJHAu/";
+    hashedPasswordFile = config.sops.secrets."neo_user/hashed_password".path;
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJBQ/hs58QFvy3tebRmRcvnxqj87zAY9AXsIfVYiITiM rgotrekiya2603@gmail.com"
     ];
@@ -89,6 +90,11 @@
     htop
     btop
     docker-compose
+    
+    # sops tools
+    sops
+    age
+    ssh-to-age
   ];
 
   # Enable the OpenSSH daemon

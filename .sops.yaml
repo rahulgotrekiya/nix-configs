@@ -1,0 +1,27 @@
+# .sops.yaml
+keys:
+  # Replace with YOUR public key from step 2
+  - &homelab age1r4sj55qcuynj336j6ef0vd2ushgrjfxexw65fgaa0wyj6r47nsfqu96udq
+  # If you have multiple machines, add more keys:
+  # - &rahul age1xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+creation_rules:
+  # Secrets for laptop/desktop
+  - path_regex: secrets/nixos/.*\.yaml$
+    key_groups:
+      - age:
+          # - *rahul
+  
+  # Secrets for homelab
+  - path_regex: secrets/homelab/.*\.yaml$
+    key_groups:
+      - age:
+          - *homelab
+          # - *rahul
+  
+  # Shared secrets (both can decrypt)
+  - path_regex: secrets/common/.*\.yaml$
+    key_groups:
+      - age:
+          - *homelab
+          # - *rahul

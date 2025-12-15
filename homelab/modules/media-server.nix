@@ -132,13 +132,16 @@
           "9091:9091"
           "51413:51413"
           "51413:51413/udp"
+        ];	
+        environmentFiles = [
+          config.sops.secrets."transmission/env".path
         ];
+
         environment = {
           PUID = "1000";
           PGID = "1000";
           TZ = "Asia/Kolkata";
           USER = "admin";
-          PASS = "admin123";  # Change this!
         };
         volumes = [
           "/var/lib/transmission:/config"
