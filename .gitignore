@@ -1,0 +1,22 @@
+# Secrets (decrypted)
+secrets/**/decrypted*
+secrets/**/*.dec.yaml
+secrets/**/*.plain.yaml
+
+# SOPS / age keys
+**/age.key
+**/keys.txt
+**/.gnupg/
+
+# WireGuard keys
+**/wireguard-keys/
+**/*.wgkey
+
+# Restic / backup passwords
+**/*restic-password*
+**/*backup-password*
+
+# Environment files
+.env
+.env.*
+

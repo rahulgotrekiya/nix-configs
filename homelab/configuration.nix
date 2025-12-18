@@ -10,7 +10,11 @@
     ./hardware-configuration.nix
     ./modules/docker.nix
     ./modules/media-server.nix
+    ./modules/file-sharing.nix
+    ./modules/monitoring.nix
     ./modules/networking.nix
+    ./modules/glance.nix
+    ./modules/sops.nix
   ];
 
   nix = {
@@ -69,8 +73,10 @@
     packages = with pkgs; [
       tree
     ];
-    # Created using mkpasswd
-    hashedPassword = "$6$ZfLXV/9Kczid8V55$76pdYdfd2yjVmxqYuv82m9ePJJ4GkjdBifsFPi/GNPN2PbwLjfJW8qJZdyFkwjeKDLCCi1YfZlCsr6iOUJHAu/";
+    hashedPasswordFile = config.sops.secrets."neo_user/hashed_password".path;
+    openssh.authorizedKeys.keys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJBQ/hs58QFvy3tebRmRcvnxqj87zAY9AXsIfVYiITiM rgotrekiya2603@gmail.com"
+    ];
   };
 
   # List packages installed in system profile
@@ -84,6 +90,11 @@
     htop
     btop
     docker-compose
+    
+    # sops tools
+    sops
+    age
+    ssh-to-age
   ];
 
   # Enable the OpenSSH daemon
@@ -112,15 +123,24 @@
     allowedTCPPorts = [ 
       22    # SSH
       80    # HTTP
+      53    # Blocky
       443   # HTTPS
       8096  # Jellyfin
+      8384  # Syncthing
+      9091  # Transmission
+      51413 # Transmission
       8989  # Sonarr
       7878  # Radarr
       9696  # Prowlarr
       8686  # Lidarr
+      8191  # Flaresolverr
       6767  # Bazarr
+      3000  # Grafana
+      9090  # Prometheus
     ];
     allowedUDPPorts = [ 
+      51413 # Transmission
+      53    # Blocky
     ];
   };
 

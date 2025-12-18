@@ -51,8 +51,8 @@
         volumes = [
           "/var/lib/sonarr:/config"
           "/media:/media"
+          "/media/downloads:/downloads"
         ];
-        extraOptions = [ "--restart=unless-stopped" ];
       };
 
       # Radarr - Movie management
@@ -67,8 +67,8 @@
         volumes = [
           "/var/lib/radarr:/config"
           "/media:/media"
+          "/media/downloads:/downloads"
         ];
-        extraOptions = [ "--restart=unless-stopped" ];
       };
 
       # Prowlarr - Indexer manager
@@ -83,7 +83,16 @@
         volumes = [
           "/var/lib/prowlarr:/config"
         ];
-        extraOptions = [ "--restart=unless-stopped" ];
+      };
+
+      # Flaresolverr - Bypasses cloudfare solver
+      flaresolverr = {
+        image = "ghcr.io/flaresolverr/flaresolverr:latest";
+        ports = [ "8191:8191" ];
+        extraOptions = [ "--network=host" ];
+        environment = {
+    	  LOG_LEVEL = "info";
+        };
       };
 
       # Bazarr - Subtitle management
@@ -99,7 +108,6 @@
           "/var/lib/bazarr:/config"
           "/media:/media"
         ];
-        extraOptions = [ "--restart=unless-stopped" ];
       };
 
       # Lidarr - Music management
@@ -115,7 +123,6 @@
           "/var/lib/lidarr:/config"
           "/media:/media"
         ];
-        extraOptions = [ "--restart=unless-stopped" ];
       };
 
       # Transmission - Torrent client
@@ -125,19 +132,21 @@
           "9091:9091"
           "51413:51413"
           "51413:51413/udp"
+        ];	
+        environmentFiles = [
+          config.sops.secrets."transmission/env".path
         ];
+
         environment = {
           PUID = "1000";
           PGID = "1000";
           TZ = "Asia/Kolkata";
           USER = "admin";
-          PASS = "admin123";  # Change this!
         };
         volumes = [
           "/var/lib/transmission:/config"
           "/media/downloads:/downloads"
         ];
-        extraOptions = [ "--restart=unless-stopped" ];
       };
     };
   };
