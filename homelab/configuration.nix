@@ -61,6 +61,13 @@
     font = "Lat2-Terminus16";
     keyMap = "us";
   };
+  
+  # Default editor
+  programs.neovim = {
+    enable = true;
+    defaultEditor = true;
+    vimAlias = true;
+  };
 
   # Define a user account. Don't forget to set a password with 'passwd'
   users.users.neo = {
