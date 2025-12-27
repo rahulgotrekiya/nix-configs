@@ -20,6 +20,14 @@
     ];
   };
 
+  services.logind.settings = {
+    Login = {
+      HandleLidSwitch = "suspend";
+      HandleLidSwitchExternalPower = "suspend";
+      HandleLidSwitchDocked = "ignore";
+    };
+  };
+
   # Automatic updating
   system.autoUpgrade = {
     enable = false;

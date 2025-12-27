@@ -20,6 +20,11 @@
     #   allowedUDPPorts = [ ... ];
     # };
   };
+  
+  services.tailscale = {
+    enable = true;
+    useRoutingFeatures = "client";
+  };
 
   systemd.services.NetworkManager-wait-online.enable = false;
 }

@@ -34,11 +34,4 @@
       enableSSHSupport = true;
     };
   };
-
-  virtualisation = {
-    docker = {
-      enable = true;
-      enableOnBoot = false;
-    };
-  };
 }
