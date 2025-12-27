@@ -28,6 +28,11 @@
       "neo_user/hashed_password" = {
         neededForUsers = true;  # Available during user creation
       };
+      # Cloudflare tunnel token
+      "cloudflare/tunnel_token" = {
+        owner = "cloudflared";
+        mode = "0400";
+      };
     };
   };
 }

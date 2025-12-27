@@ -15,6 +15,7 @@
     ./modules/networking.nix
     ./modules/glance.nix
     ./modules/sops.nix
+    ./modules/cloudflare-tunnel.nix
   ];
 
   nix = {
