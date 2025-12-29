@@ -16,6 +16,7 @@
     ./modules/glance.nix
     ./modules/sops.nix
     ./modules/cloudflare-tunnel.nix
+    ./modules/filebrowser.nix
   ];
 
   nix = {

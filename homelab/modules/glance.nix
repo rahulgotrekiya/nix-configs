@@ -66,6 +66,10 @@
                 cache: 1m
                 title: Services
                 sites:
+                      - title: File Browser
+                        url: http://homelab:8092
+                        icon: di:filebrowser
+                      
                       # --- Media Stack ---
                       - title: Syncthing
                         url: http://homelab:8384
@@ -162,8 +166,6 @@
                     title: selfh.st
                     limit: 4
                   - url: https://ciechanow.ski/atom.xml
-                  - url: https://www.joshwcomeau.com/rss.xml
-                    title: Josh Comeau
                   - url: https://samwho.dev/rss.xml
                   - url: https://ishadeed.com/feed.xml
                     title: Ahmad Shadeed
@@ -183,6 +185,10 @@
                 cache: 1m
                 title: Services
                 sites:
+                  - title: File Browser
+                    url: http://homelab:8092
+                    icon: di:filebrowser
+                  
                   # --- Media Stack ---
                   - title: Syncthing
                     url: http://homelab:8384
