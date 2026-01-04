@@ -1,9 +1,9 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
   # Prometheus - Metrics collection
   services.prometheus = {
-    enable = false;
+    enable = true;
     port = 9090;
     
     exporters = {
@@ -35,7 +35,7 @@
 
   # Grafana - Visualization
   services.grafana = {
-    enable = false;
+    enable = true;
     settings = {
       server = {
         http_addr = "0.0.0.0";
@@ -45,7 +45,7 @@
       
       security = {
         admin_user = "admin";
-        admin_password = "admin123";  # Change this 
+        admin_password = "$__file{${config.sops.secrets."grafana/admin_password".path}}";
       };
 
       analytics.reporting_enabled = false;
@@ -77,4 +77,18 @@
   systemd.tmpfiles.rules = [
     "d /var/lib/uptime-kuma 0755 root root -"
   ];
+
+
+   systemd.services.grafana.preStart = lib.mkAfter ''
+    # If Grafana database exists, reset admin password from secret
+    if [ -f /var/lib/grafana/grafana.db ]; then
+      PASSWORD=$(cat ${config.sops.secrets."grafana/admin_password".path})
+      
+      # Use Grafana's binary to reset password
+      ${pkgs.grafana}/bin/grafana cli \
+        --homepath ${pkgs.grafana}/share/grafana \
+        --config /nix/store/*-grafana.ini/grafana.ini \
+        admin reset-admin-password "$PASSWORD" 2>/dev/null || true
+    fi
+  '';
 }
