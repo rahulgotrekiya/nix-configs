@@ -20,10 +20,6 @@
     overrideFolders = true;
     guiAddress = "0.0.0.0:8384";
     settings = {
-      gui = {
-    	user = "admin";
-        password = "admin123";
-      };
       devices = {
         # devices
         "phone" = { id = "JRV7NGD-JCPOAEA-4C6J6D3-BFMKFC4-AOCIMHT-27XX6HH-J2MIRGR-FTTUOQU"; };

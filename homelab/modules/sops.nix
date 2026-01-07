@@ -13,12 +13,6 @@
 
     # Define which secrets to extract
     secrets = {
-      # Syncthing
-      "syncthing/gui_password" = {
-        owner = "neo";
-        mode = "0400";  # Read-only for owner
-      };
-      
       # Transmission
       "transmission/env" = {
         owner = "neo";
