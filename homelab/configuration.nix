@@ -85,6 +85,7 @@
     hashedPasswordFile = config.sops.secrets."neo_user/hashed_password".path;
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJBQ/hs58QFvy3tebRmRcvnxqj87zAY9AXsIfVYiITiM rgotrekiya2603@gmail.com"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKhgU+fyofY/2xfmyPZflpLG172Gjze5V5T74/+R8AO3 u0_a324@localhost"
     ];
   };
 
@@ -107,7 +108,14 @@
   ];
 
   # Enable the OpenSSH daemon
-  services.openssh.enable = true;
+  services.openssh = {
+    enable = true;
+    settings = {
+      PasswordAuthentication = false;
+      PermitRootLogin = "no";
+      KbdInteractiveAuthentication = false;
+    };
+  };
 
   programs.git = {
     enable = true;
@@ -125,7 +133,18 @@
      core.editor = "nvim";
     };
   };
- 
+  
+  # Hardware transcoding!
+  hardware.graphics = {
+    enable = true;
+    extraPackages = with pkgs; [
+      intel-media-driver  # For Intel HD 520
+      intel-vaapi-driver
+      libva-vdpau-driver
+      libvdpau-va-gl
+    ];
+  };
+
   # Firewall
   networking.firewall = {
     enable = true;
