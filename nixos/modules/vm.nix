@@ -1,11 +1,14 @@
 { config, pkgs, ... }:
 
 {
-  virtualisation.libvirtd.enable = true;
-  programs.virt-manager.enable = true;
-
-  users.users.rahul = {
-    isNormalUser = true;
-    extraGroups = [ "libvirtd" "kvm" ];
+  virtualisation.virtualbox.host = {
+    enable = true;
+    enableExtensionPack = true;
   };
+
+  users.extraGroups.vboxusers.members = [ "rahul" ];
+
+  environment.systemPackages = with pkgs; [
+    vagrant
+  ];
 }
