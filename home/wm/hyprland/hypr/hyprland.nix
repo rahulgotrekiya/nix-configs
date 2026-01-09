@@ -4,7 +4,6 @@
   wayland.windowManager.hyprland = {
     enable = true;
     systemd.enable = true;
-    xwayland.enable = true;
 
     settings = {
       monitor = ",1920x1080@144,auto,1";
@@ -91,11 +90,9 @@
       misc {
         vfr = true
         vrr = 1
-        disable_hyprland_logo = true
-        disable_splash_rendering = true
         mouse_move_enables_dpms = true
         enable_swallow = true
-        new_window_takes_over_fullscreen = 2
+        on_focus_under_fullscreen = 2
       }
       
       # NVIDIA GPU rules for graphics performance

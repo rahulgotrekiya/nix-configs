@@ -35,12 +35,6 @@
       "center,class:^(scratchpad)$"
       "workspace 9,class:^(resolve)$"
       "float,class:^(resolve)$"
-    ];
-    
-    # Layer rules
-    layerrule = [
-      "blur, rofi"
-      "ignorezero, rofi"
-    ];    
+    ];   
   };
 }

@@ -29,7 +29,7 @@
     libnotify
     dysk
     docker-compose
-    youtube-music
+    pear-desktop
     
     # Nodejs
     nodejs
