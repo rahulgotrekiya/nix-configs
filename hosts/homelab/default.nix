@@ -9,6 +9,7 @@
   # systemd-boot (simpler than GRUB for a server)
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  boot.loader.timeout = 1;
 
   # NVMe stability
   boot.kernelParams = [
@@ -42,7 +43,7 @@
     packages = with pkgs; [ tree ];
     hashedPasswordFile = config.sops.secrets."neo_user/hashed_password".path;
     openssh.authorizedKeys.keys = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJBQ/hs58QFvy3tebRmRcvnxqj87zAY9AXsIfVYiITiM rgotrekiya2603@gmail.com"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIA06yTbPT4X1rDLYi7JMFQKvmy5zuCfSTkGDNeyccoNB rahulgotrekiya@gmail.com"
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKhgU+fyofY/2xfmyPZflpLG172Gjze5V5T74/+R8AO3 u0_a324@localhost"
     ];
   };
