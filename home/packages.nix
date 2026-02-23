@@ -29,7 +29,7 @@
     libnotify
     dysk
     docker-compose
-    pear-desktop
+    antigravity
     
     # Nodejs
     nodejs

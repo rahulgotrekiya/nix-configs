@@ -30,8 +30,8 @@
 
   # Automatic updating
   system.autoUpgrade = {
-    enable = false;
-    dates = "daily";
+    enable = true;
+    dates = "weekly";
   };
 
   # Automatic cleaning

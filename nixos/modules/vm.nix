@@ -11,4 +11,8 @@
   environment.systemPackages = with pkgs; [
     vagrant
   ];
+
+  networking.hosts = {};
+  networking.extraHosts = "";
+
 }

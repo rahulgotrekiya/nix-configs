@@ -44,15 +44,6 @@
       "$mainMod ALT, V, exec, pkill -x rofi || $scrPath/clipboard-manager -w"
       "$mainMod, space, exec, pkill -x rofi || rofi -show drun -font \"JetBrains Mono Nerd Font Semi-Bold 16\""
 
-      # Pypr layout manager
-      "$mainMod, M, exec, pypr layout_center toggle"
-      "$mainMod SHIFT, up, exec, pypr zoom ++0.5"
-      "$mainMod SHIFT, down, exec, pypr zoom"
-      "$mainMod, H, exec, pypr layout_center prev"
-      "$mainMod, L, exec, pypr layout_center next"
-      "$mainMod, J, exec, pypr layout_center prev2"
-      "$mainMod, K, exec, pypr layout_center next2"
-
       # Run on dedicated GPU
       "$mainMod, $calcKey, exec, prime-run code"
       "$mainMod, P, exec, prime-run firefox"
@@ -61,7 +52,13 @@
       ", $calcKey, exec, prime-run obsidian"
       ", $omenKey, exec, flatpak run app.zen_browser.zen"
 
-      # Window focus with arrow keys
+      # Window focus with vim bindings
+      "$mainMod, h, movefocus, l"
+      "$mainMod, l, movefocus, r"
+      "$mainMod, k, movefocus, u"
+      "$mainMod, j, movefocus, d"
+
+     # Window focus with arrow keys
       "$mainMod, left, movefocus, l"
       "$mainMod, right, movefocus, r"
       "$mainMod, up, movefocus, u"

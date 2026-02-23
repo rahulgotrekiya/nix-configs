@@ -15,8 +15,13 @@
     dosbox
     gcc
     docker-compose
+    awscli
+    easyeffects
   ];
 
+  # HP Victus uses Intel HDA with SOF (Sound Open Firmware)
+  hardware.firmware = with pkgs; [ sof-firmware ];
+  
   # Install firefox.
   programs.firefox.enable = true;
 
