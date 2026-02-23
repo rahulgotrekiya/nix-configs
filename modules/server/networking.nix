@@ -48,6 +48,14 @@ in
           proxyWebsockets = true;
         };
       };
+
+      # Uptime Kuma
+      "status.homelab.local" = {
+        locations."/" = {
+          proxyPass = "http://127.0.0.1:3001";
+          proxyWebsockets = true;
+        };
+      };
     };
   };
 
@@ -87,6 +95,7 @@ in
           "media.homelab.local" = serverIP;
           "monitor.homelab.local" = serverIP;
           "docker.homelab.local" = serverIP;
+          "status.homelab.local" = serverIP;
         };
       };
     };

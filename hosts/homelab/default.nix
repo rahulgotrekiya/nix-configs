@@ -95,6 +95,7 @@
       8191  # Flaresolverr
       6767  # Bazarr
       3000  # Grafana
+      3001  # Uptime Kuma
       9090  # Prometheus
     ];
     allowedUDPPorts = [
