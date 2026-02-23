@@ -3,13 +3,12 @@
 
   inputs = {
     nixpkgs.url = "nixpkgs/nixos-unstable";
+
     home-manager.url = "github:nix-community/home-manager/master";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
-    sops-nix = {
-      url = "github:Mic92/sops-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    sops-nix.url = "github:Mic92/sops-nix";
+    sops-nix.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = { self, nixpkgs, home-manager, sops-nix, ... }:
@@ -17,45 +16,58 @@
       system = "x86_64-linux";
       lib = nixpkgs.lib;
       pkgs = nixpkgs.legacyPackages.${system};
+
+      # Helper — define a host in one line
+      mkHost = { hostname, user ? "rahul", homeModule ? null, extraModules ? [] }:
+        lib.nixosSystem {
+          inherit system;
+          specialArgs = { meta = { inherit hostname; }; };
+          modules = [
+            ./hosts/${hostname}
+            ./modules/base.nix
+            sops-nix.nixosModules.sops
+          ]
+          ++ lib.optionals (homeModule != null) [
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.users.${user} = import homeModule;
+            }
+          ]
+          ++ extraModules;
+        };
     in {
       nixosConfigurations = {
-        # Laptop/desktop configuration
-        nixos = lib.nixosSystem {
-          inherit system;
-          modules = [
-	    ./nixos/configuration.nix
-	    sops-nix.nixosModules.sops  # sops module
- 	  ];
+        # Laptop (HP Victus)
+        nixos = mkHost {
+          hostname = "nixos";
+          homeModule = ./home;
+          extraModules = [];
         };
 
-        # home server configuration
-        homelab = lib.nixosSystem {
-          inherit system;
-          specialArgs = {
-            meta = { 
-              hostname = "homelab";
-            };
-          };
-          modules = [
-            ./homelab/configuration.nix
-	    sops-nix.nixosModules.sops  # sops module
+        # Homelab (HP ENVY x360)
+        homelab = mkHost {
+          hostname = "homelab";
+          user = "neo";
+          extraModules = [
+            ./modules/server/docker.nix
+            ./modules/server/media-server.nix
+            ./modules/server/monitoring.nix
+            ./modules/server/networking.nix
+            ./modules/server/file-sharing.nix
+            ./modules/server/cloudflare-tunnel.nix
+            ./modules/server/filebrowser.nix
+            ./modules/server/glance.nix
+            ./secrets/sops.nix
           ];
         };
-      };
 
-      homeConfigurations = {
-        rahul = home-manager.lib.homeManagerConfiguration {
-          inherit pkgs;
-          modules = [ 
-	    ./home/home.nix 
-	    sops-nix.homeManagerModules.sops 
-	  ];
-        };
-        
-        # Optional: separate home-manager config for homelab user
-        # neo = home-manager.lib.homeManagerConfiguration {
-        #   inherit pkgs;
-        #   modules = [ ./homelab/home.nix ];
+        # To add a new host:
+        # myhost = mkHost {
+        #   hostname = "myhost";
+        #   homeModule = ./home;             # optional
+        #   extraModules = [ ./modules/server/docker.nix ];
         # };
       };
     };

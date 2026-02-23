@@ -2,7 +2,7 @@
 
 {
   sops = {
-    defaultSopsFile = ../../secrets/homelab/services.yaml;
+    defaultSopsFile = ./homelab/services.yaml;
     
     age = {
       keyFile = "/home/neo/.config/sops/age/keys.txt";

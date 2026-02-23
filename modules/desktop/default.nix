@@ -1,3 +1,4 @@
+# Desktop environment and window manager selector
 { config, pkgs, lib, ... }:
 
 let
@@ -16,6 +17,8 @@ in
   imports = [
     common
     selectedDE
+    ./wm.nix
+    ./nvidia.nix
   ];
 
   services.displayManager.autoLogin = {
