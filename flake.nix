@@ -59,6 +59,7 @@
             ./modules/server/cloudflare-tunnel.nix
             ./modules/server/filebrowser.nix
             ./modules/server/glance.nix
+            ./modules/server/immich.nix
             ./secrets/sops.nix
           ];
         };

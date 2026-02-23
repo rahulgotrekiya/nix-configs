@@ -56,6 +56,19 @@ in
           proxyWebsockets = true;
         };
       };
+
+      # Immich Photos
+      "photos.homelab.local" = {
+        locations."/" = {
+          proxyPass = "http://127.0.0.1:2283";
+          proxyWebsockets = true;
+          extraConfig = ''
+            client_max_body_size 50000M;
+            proxy_read_timeout 600s;
+            proxy_send_timeout 600s;
+          '';
+        };
+      };
     };
   };
 
@@ -96,6 +109,7 @@ in
           "monitor.homelab.local" = serverIP;
           "docker.homelab.local" = serverIP;
           "status.homelab.local" = serverIP;
+          "photos.homelab.local" = serverIP;
         };
       };
     };
