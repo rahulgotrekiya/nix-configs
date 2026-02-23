@@ -72,6 +72,9 @@
     volumes = [
       "/var/lib/uptime-kuma:/app/data"
     ];
+    extraOptions = [
+      "--add-host=host.docker.internal:host-gateway"
+    ];
   };
 
   systemd.tmpfiles.rules = [
