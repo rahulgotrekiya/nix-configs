@@ -1,5 +1,9 @@
 { config, pkgs, ... }:
 
+let
+  serverIP = "192.168.1.13";
+  localNet = "192.168.1.0/24";
+in
 {
   # Nginx - Reverse proxy
   services.nginx = {
@@ -79,10 +83,10 @@
       # Optional: Custom DNS entries
       customDNS = {
         mapping = {
-          "homelab.local" = "192.168.1.13"; 
-          "media.homelab.local" = "192.168.1.13";
-          "monitor.homelab.local" = "192.168.1.13";
-          "docker.homelab.local" = "192.168.1.13";
+          "homelab.local" = serverIP; 
+          "media.homelab.local" = serverIP;
+          "monitor.homelab.local" = serverIP;
+          "docker.homelab.local" = serverIP;
         };
       };
     };
@@ -132,7 +136,7 @@
     bantime = "1h";
     ignoreIP = [
       "127.0.0.1/8"
-      "192.168.1.0/24" 
+      localNet
     ];
     jails = {
       sshd.settings = {

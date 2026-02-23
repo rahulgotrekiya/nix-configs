@@ -1,11 +1,14 @@
 { config, pkgs, ... }:
 
+let
+  localNet = "192.168.0.0/24";
+in
 {
  # NFS file sharing (Linux/Unix)
   services.nfs.server = {
     enable = true;
     exports = ''
-      /media    192.168.0.0/24(ro,sync,no_subtree_check)
+      /media    ${localNet}(ro,sync,no_subtree_check)
     '';
   };
 
