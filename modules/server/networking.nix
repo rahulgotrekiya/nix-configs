@@ -3,9 +3,25 @@
 let
   serverIP = "192.168.1.13";
   localNet = "192.168.1.0/24";
+  domain = "gotrekiya.site";
 in
 {
-  # Nginx - Reverse proxy
+  # ── ACME (Let's Encrypt) ─────────────────────────────────────────
+  security.acme = {
+    acceptTerms = true;
+    defaults.email = "rahulgotrekiya@gmail.com";
+
+    # Wildcard certificate for *.gotrekiya.site
+    certs."${domain}" = {
+      dnsProvider = "cloudflare";
+      environmentFile = config.sops.secrets."cloudflare/acme_env".path;
+      domain = domain;
+      extraDomainNames = [ "*.${domain}" ];
+      group = "nginx"; # Let Nginx read the cert
+    };
+  };
+
+  # ── Nginx — Reverse proxy with SSL ──────────────────────────────
   services.nginx = {
     enable = true;
     recommendedProxySettings = true;
@@ -14,16 +30,20 @@ in
     recommendedGzipSettings = true;
 
     virtualHosts = {
-      # Dashboard
-      "homelab.local" = {
+      # ── Dashboard (Glance) ──
+      "${domain}" = {
+        forceSSL = true;
+        useACMEHost = domain;
         locations."/" = {
-          proxyPass = "http://127.0.0.1:8080"; 
+          proxyPass = "http://127.0.0.1:8080";
           proxyWebsockets = true;
         };
       };
 
-      # Jellyfin
-      "media.homelab.local" = {
+      # ── Jellyfin ──
+      "media.${domain}" = {
+        forceSSL = true;
+        useACMEHost = domain;
         locations."/" = {
           proxyPass = "http://127.0.0.1:8096";
           proxyWebsockets = true;
@@ -33,32 +53,40 @@ in
         };
       };
 
-      # Grafana
-      "monitor.homelab.local" = {
+      # ── Grafana ──
+      "monitor.${domain}" = {
+        forceSSL = true;
+        useACMEHost = domain;
         locations."/" = {
           proxyPass = "http://127.0.0.1:3000";
           proxyWebsockets = true;
         };
       };
 
-      # Portainer
-      "docker.homelab.local" = {
+      # ── Portainer ──
+      "docker.${domain}" = {
+        forceSSL = true;
+        useACMEHost = domain;
         locations."/" = {
           proxyPass = "http://127.0.0.1:9000";
           proxyWebsockets = true;
         };
       };
 
-      # Uptime Kuma
-      "status.homelab.local" = {
+      # ── Uptime Kuma ──
+      "status.${domain}" = {
+        forceSSL = true;
+        useACMEHost = domain;
         locations."/" = {
           proxyPass = "http://127.0.0.1:3001";
           proxyWebsockets = true;
         };
       };
 
-      # Immich Photos
-      "photos.homelab.local" = {
+      # ── Immich Photos ──
+      "photos.${domain}" = {
+        forceSSL = true;
+        useACMEHost = domain;
         locations."/" = {
           proxyPass = "http://127.0.0.1:2283";
           proxyWebsockets = true;
@@ -69,10 +97,90 @@ in
           '';
         };
       };
+
+      # ── Sonarr ──
+      "sonarr.${domain}" = {
+        forceSSL = true;
+        useACMEHost = domain;
+        locations."/" = {
+          proxyPass = "http://127.0.0.1:8989";
+          proxyWebsockets = true;
+        };
+      };
+
+      # ── Radarr ──
+      "radarr.${domain}" = {
+        forceSSL = true;
+        useACMEHost = domain;
+        locations."/" = {
+          proxyPass = "http://127.0.0.1:7878";
+          proxyWebsockets = true;
+        };
+      };
+
+      # ── Prowlarr ──
+      "prowlarr.${domain}" = {
+        forceSSL = true;
+        useACMEHost = domain;
+        locations."/" = {
+          proxyPass = "http://127.0.0.1:9696";
+          proxyWebsockets = true;
+        };
+      };
+
+      # ── Bazarr ──
+      "bazarr.${domain}" = {
+        forceSSL = true;
+        useACMEHost = domain;
+        locations."/" = {
+          proxyPass = "http://127.0.0.1:6767";
+          proxyWebsockets = true;
+        };
+      };
+
+      # ── Lidarr ──
+      "lidarr.${domain}" = {
+        forceSSL = true;
+        useACMEHost = domain;
+        locations."/" = {
+          proxyPass = "http://127.0.0.1:8686";
+          proxyWebsockets = true;
+        };
+      };
+
+      # ── Transmission ──
+      "torrent.${domain}" = {
+        forceSSL = true;
+        useACMEHost = domain;
+        locations."/" = {
+          proxyPass = "http://127.0.0.1:9091";
+          proxyWebsockets = true;
+        };
+      };
+
+      # ── File Browser ──
+      "files.${domain}" = {
+        forceSSL = true;
+        useACMEHost = domain;
+        locations."/" = {
+          proxyPass = "http://127.0.0.1:8092";
+          proxyWebsockets = true;
+        };
+      };
+
+      # ── Syncthing ──
+      "sync.${domain}" = {
+        forceSSL = true;
+        useACMEHost = domain;
+        locations."/" = {
+          proxyPass = "http://127.0.0.1:8384";
+          proxyWebsockets = true;
+        };
+      };
     };
   };
 
-  # Pi-hole / AdGuard Home alternative - DNS with ad blocking
+  # ── Blocky — DNS with ad blocking ───────────────────────────────
   services.blocky = {
     enable = true;
     settings = {
@@ -101,15 +209,23 @@ in
         };
       };
 
-      # Optional: Custom DNS entries
+      # Custom DNS entries — all subdomains → server IP
       customDNS = {
         mapping = {
-          "homelab.local" = serverIP; 
-          "media.homelab.local" = serverIP;
-          "monitor.homelab.local" = serverIP;
-          "docker.homelab.local" = serverIP;
-          "status.homelab.local" = serverIP;
-          "photos.homelab.local" = serverIP;
+          "${domain}" = serverIP;
+          "media.${domain}" = serverIP;
+          "monitor.${domain}" = serverIP;
+          "docker.${domain}" = serverIP;
+          "status.${domain}" = serverIP;
+          "photos.${domain}" = serverIP;
+          "sonarr.${domain}" = serverIP;
+          "radarr.${domain}" = serverIP;
+          "prowlarr.${domain}" = serverIP;
+          "bazarr.${domain}" = serverIP;
+          "lidarr.${domain}" = serverIP;
+          "torrent.${domain}" = serverIP;
+          "files.${domain}" = serverIP;
+          "sync.${domain}" = serverIP;
         };
       };
     };

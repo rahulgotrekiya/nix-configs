@@ -38,6 +38,12 @@
         owner = "cloudflared";
         mode = "0400";
       };
+
+      # Cloudflare API token for ACME (Let's Encrypt) DNS-01 challenge
+      "cloudflare/acme_env" = {
+        owner = "acme";
+        mode = "0400";
+      };
     };
   };
 }

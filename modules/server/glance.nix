@@ -67,49 +67,49 @@
                 title: Services
                 sites:
                       - title: File Browser
-                        url: http://homelab:8092
+                        url: https://files.gotrekiya.site
                         icon: di:filebrowser
                       
                       # --- Media Stack ---
                       - title: Syncthing
-                        url: http://homelab:8384
+                        url: https://sync.gotrekiya.site
                         icon: di:syncthing 
                       
                       - title: Jellyfin
-                        url: http://homelab:8096
+                        url: https://media.gotrekiya.site
                         icon: di:jellyfin
 
                       - title: Sonarr
-                        url: http://homelab:8989
+                        url: https://sonarr.gotrekiya.site
                         icon: di:sonarr
 
                       - title: Radarr
-                        url: http://homelab:7878
+                        url: https://radarr.gotrekiya.site
                         icon: di:radarr
 
                       - title: Prowlarr
-                        url: http://homelab:9696
+                        url: https://prowlarr.gotrekiya.site
                         icon: di:prowlarr
 
                       - title: Bazarr
-                        url: http://homelab:6767
+                        url: https://bazarr.gotrekiya.site
                         icon: di:bazarr
 
                       - title: Transmission
-                        url: http://homelab:9091
+                        url: https://torrent.gotrekiya.site
                         icon: di:transmission
 
                       # --- Management ---
                       - title: Portainer
-                        url: http://homelab:9000
+                        url: https://docker.gotrekiya.site
                         icon: di:portainer
 
                       - title: Grafana
-                        url: http://homelab:3000
+                        url: https://monitor.gotrekiya.site
                         icon: di:grafana
 
                       - title: Uptime Kuma
-                        url: http://homelab:3001
+                        url: https://status.gotrekiya.site
                         icon: mdi:monitor-eye
 
               - type: bookmarks
@@ -186,53 +186,53 @@
                 title: Services
                 sites:
                   - title: File Browser
-                    url: http://homelab:8092
+                    url: https://files.gotrekiya.site
                     icon: di:filebrowser
                   
                   # --- Media Stack ---
                   - title: Syncthing
-                    url: http://homelab:8384
+                    url: https://sync.gotrekiya.site
                     icon: di:syncthing 
                   
                   - title: Jellyfin
-                    url: http://homelab:8096
+                    url: https://media.gotrekiya.site
                     icon: di:jellyfin
 
                   - title: Sonarr
-                    url: http://homelab:8989
+                    url: https://sonarr.gotrekiya.site
                     icon: di:sonarr
 
                   - title: Radarr
-                    url: http://homelab:7878
+                    url: https://radarr.gotrekiya.site
                     icon: di:radarr
 
                   - title: Prowlarr
-                    url: http://homelab:9696
+                    url: https://prowlarr.gotrekiya.site
                     icon: di:prowlarr
 
                   - title: Lidarr
-                    url: http://homelab:8686
+                    url: https://lidarr.gotrekiya.site
                     icon: di:lidarr
 
                   - title: Bazarr
-                    url: http://homelab:6767
+                    url: https://bazarr.gotrekiya.site
                     icon: di:bazarr
 
                   - title: Transmission
-                    url: http://homelab:9091
+                    url: https://torrent.gotrekiya.site
                     icon: di:transmission
 
                   # --- Management ---
                   - title: Portainer
-                    url: http://homelab:9000
+                    url: https://docker.gotrekiya.site
                     icon: di:portainer
 
                   - title: Grafana
-                    url: http://homelab:3000
+                    url: https://monitor.gotrekiya.site
                     icon: di:grafana
 
                   - title: Uptime Kuma
-                    url: http://homelab:3001
+                    url: https://status.gotrekiya.site
                     icon: mdi:monitor-eye
 
               - type: videos
