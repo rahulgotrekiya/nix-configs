@@ -81,26 +81,15 @@
     enable = true;
     allowedTCPPorts = [
       22    # SSH
-      80    # HTTP
-      53    # Blocky
+      80    # Nginx (everything goes through this)
       443   # HTTPS
-      8096  # Jellyfin
-      8384  # Syncthing
-      9091  # Transmission
-      51413 # Transmission
-      8989  # Sonarr
-      7878  # Radarr
-      9696  # Prowlarr
-      8686  # Lidarr
-      8191  # Flaresolverr
-      6767  # Bazarr
-      3000  # Grafana
-      3001  # Uptime Kuma
-      9090  # Prometheus
+      53    # Blocky DNS
+      8384  # Syncthing (needs direct access)
+      51413 # Transmission peer port
     ];
     allowedUDPPorts = [
       51413 # Transmission
-      53    # Blocky
+      53    # Blocky DNS
     ];
   };
 

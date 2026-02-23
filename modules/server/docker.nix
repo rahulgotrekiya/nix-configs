@@ -31,6 +31,18 @@
           "/var/lib/docker-data/portainer:/data"
         ];
       };
+
+      # Watchtower - Auto-update Docker containers
+      watchtower = {
+        image = "containrrr/watchtower:latest";
+        volumes = [
+          "/var/run/docker.sock:/var/run/docker.sock"
+        ];
+        environment = {
+          WATCHTOWER_CLEANUP = "true";           # Remove old images after update
+          WATCHTOWER_SCHEDULE = "0 0 4 * * 0";   # 4 AM every Sunday
+        };
+      };
     };
   };
 }
