@@ -63,7 +63,7 @@ nix.settings.experimental-features = [ "nix-command" "flakes" ];
 ### Clone & Apply
 
 ```bash
-git clone https://github.com/RahulGotrekiya/nix-configs.git ~/dotfiles
+git clone https://github.com/rahulgotrekiya/nix-configs.git ~/dotfiles
 cd ~/dotfiles
 ```
 
@@ -73,7 +73,7 @@ Replace the hardware config with your own:
 cp /etc/nixos/hardware-configuration.nix hosts/nixos/hardware.nix
 ```
 
-Build & apply — **one command does everything** (system + home-manager):
+Build & apply - **one command does everything** (system + home-manager):
 
 ```bash
 sudo nixos-rebuild switch --flake .#nixos
