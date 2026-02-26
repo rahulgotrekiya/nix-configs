@@ -6,7 +6,7 @@
     ./hypr
     ./waybar
     ./scripts
-    ./swaync
+    ./dunst.nix
   ];  
 }
 

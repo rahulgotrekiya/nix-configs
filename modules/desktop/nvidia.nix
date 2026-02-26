@@ -47,15 +47,11 @@
     package = config.boot.kernelPackages.nvidiaPackages.stable;
   };
 
-  # For Hyprland users with hybrid graphics
+  # NVIDIA-specific variables for Hyprland
   environment.sessionVariables = {
-    # For Wayland compatibility
-    NIXOS_OZONE_WL = "1";
-    # NVIDIA-specific variables for Hyprland 
     WLR_NO_HARDWARE_CURSORS = "1";
     __GLX_VENDOR_LIBRARY_NAME = "nvidia";
     LIBVA_DRIVER_NAME = "iHD";  # Use Intel's media driver for video acceleration
-    # For Wayland/Hyprland with NVIDIA
     GBM_BACKEND = "nvidia-drm";
     WLR_RENDERER = "vulkan";
   };

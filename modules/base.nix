@@ -52,9 +52,7 @@
     git
     wget
     htop
-    btop
     tree
-    neovim
 
     # sops tools
     sops

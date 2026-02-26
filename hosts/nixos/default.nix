@@ -82,12 +82,8 @@
     pulse.enable = true;
   };
 
-  # SSH & GPG
+  # SSH
   services.openssh.enable = true;
-  programs.gnupg.agent = {
-    enable = true;
-    enableSSHSupport = true;
-  };
 
   # Flatpak
   services.flatpak.enable = true;
@@ -163,7 +159,6 @@
     bibata-cursors
     dosbox
     gcc
-    docker-compose
     awscli
     easyeffects
     vagrant

@@ -85,6 +85,17 @@ in {
               esac
             }
 
+            # Color for progress bar based on battery level (Tokyo Night)
+            color_for_level() {
+              if [ "$1" -le 15 ]; then
+                echo "#f7768e"   # red
+              elif [ "$1" -le 30 ]; then
+                echo "#e0af68"   # yellow
+              else
+                echo "#9ece6a"   # green
+              fi
+            }
+
             echo "Battery monitor started."
 
             while true; do
@@ -99,10 +110,10 @@ in {
                 && [ "$CHARGING" != "$PREV_CHARGING_STATE" ]; then
                 if [ "$CHARGING" = "charging" ]; then
                   notify-send --close=$CRITICAL_REPLACE_ID 2>/dev/null || true
-                  notify-send -u low "Charger Connected" "Battery is now charging ($BATTERY_PCT%)" -i battery-good-charging
+                  notify-send -u low -h int:value:$BATTERY_PCT -h "string:hlcolor:#9ece6a" "Charger Connected" "Battery is now charging" -i battery-good-charging
                   LAST_NOTIFICATION_LEVEL=100
                 else
-                  notify-send -u low "Charger Disconnected" "Running on battery ($BATTERY_PCT%)" -i battery-good
+                  notify-send -u low -h int:value:$BATTERY_PCT -h "string:hlcolor:$(color_for_level $BATTERY_PCT)" "Charger Disconnected" "Running on battery" -i battery-good
                   FULL_NOTICE_SENT=false
                   ALMOST_FULL_SENT=false
                 fi
@@ -112,11 +123,11 @@ in {
 
               if [ "$CHARGING" = "charging" ]; then
                 if [ "$BATTERY_PCT" -ge 95 ] && [ "$ALMOST_FULL_SENT" = false ]; then
-                  notify-send -u low -i battery-full "Battery Almost Full" "Battery reached 95%"
+                  notify-send -u low -h int:value:$BATTERY_PCT -h "string:hlcolor:#9ece6a" -i battery-full "Battery Almost Full" "Battery at $BATTERY_PCT%"
                   ALMOST_FULL_SENT=true
                 fi
                 if [ "$BATTERY_PCT" -ge 100 ] && [ "$FULL_NOTICE_SENT" = false ]; then
-                  notify-send -u normal -i battery-full-charged "Battery Fully Charged" "You can remove the charger now."
+                  notify-send -u normal -h int:value:100 -h "string:hlcolor:#9ece6a" -i battery-full-charged "Battery Fully Charged" "You can remove the charger now."
                   FULL_NOTICE_SENT=true
                 fi
                 sleep 1
@@ -127,8 +138,8 @@ in {
               ALMOST_FULL_SENT=false
 
               if [ "$BATTERY_PCT" -le "$CRITICAL_LEVEL" ]; then
-                notify-send -u critical --replace-id=$CRITICAL_REPLACE_ID \
-                  "Battery Critical!" "Battery at $BATTERY_PCT%. Connect charger now!" \
+                notify-send -u critical -h int:value:$BATTERY_PCT -h "string:hlcolor:#f7768e" --replace-id=$CRITICAL_REPLACE_ID \
+                  "Battery Critical!" "Connect charger now!" \
                   -i battery-empty
                 sleep "$CRITICAL_INTERVAL"
                 continue
@@ -143,7 +154,7 @@ in {
                       ICON="battery-low"
                       URGENCY="normal"
                     fi
-                    notify-send -u "$URGENCY" "Battery Notice" "Battery at $BATTERY_PCT%" -i "$ICON"
+                    notify-send -u "$URGENCY" -h int:value:$BATTERY_PCT -h "string:hlcolor:$(color_for_level $BATTERY_PCT)" "Battery Notice" "Battery at $BATTERY_PCT%" -i "$ICON"
                     LAST_NOTIFICATION_LEVEL="$BATTERY_PCT"
                     break
                   fi
