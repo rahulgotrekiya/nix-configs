@@ -115,8 +115,8 @@
   # NTFS work partition
   fileSystems."/mnt/work" = {
     device = "/dev/disk/by-uuid/8246945646944D33";
-    fsType = "ntfs3";
-    options = [ "defaults" "nofail" ];
+    fsType = "ntfs-3g";
+    options = [ "rw" "uid=1000" "gid=100" "dmask=022" "fmask=133" "nofail" "windows_names" ];
   };
   systemd.tmpfiles.rules = [ "d /mnt/work 0755 root root -" ];
 

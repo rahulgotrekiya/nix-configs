@@ -24,6 +24,7 @@
         "/mnt/work/study/Projects/nixpkgs"
         "~/tc/BIN/PROJECT/chat/"
         "/mnt/work/study/MCA/JavaScript/food"
+        "/mnt/work/study/MCA/clg-lab"
       ];
     };
   };

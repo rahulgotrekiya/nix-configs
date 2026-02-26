@@ -138,7 +138,7 @@ sudo nixos-rebuild switch --flake .#myhost
 
 ## 🔑 Home Manager
 
-Home Manager is **integrated as a NixOS module** — no separate `home-manager switch` needed. When you run `nixos-rebuild switch`, it builds both system config and user environment atomically.
+Home Manager is **integrated as a NixOS module** - no separate `home-manager switch` needed. When you run `nixos-rebuild switch`, it builds both system config and user environment atomically.
 
 This is configured in `flake.nix` via the `mkHost` helper:
 
