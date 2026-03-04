@@ -70,8 +70,11 @@
       ;; Caps Word — auto-disables after space/punctuation
       cw (caps-word 2000)
 
-      ;; Space → Tap: Space | Hold: Navigation (temporary)
-      nav-spc (tap-hold 200 200 spc (layer-while-held navigation))
+      ;; Space → Tap: Space | Hold: Mouse (temporary)
+      mou-spc (tap-hold 200 200 spc (layer-while-held mouse))
+
+      ;; Tab → Tap: Tab | Hold: Navigation (temporary)
+      nav-tab (tap-hold 200 200 tab (layer-while-held navigation))
 
       ;; Right Alt → Tap: Toggle Mouse layer | Hold: Temporary Mouse
       mou-ralt (tap-hold 200 200 (layer-switch mouse) (layer-while-held mouse))
@@ -109,22 +112,22 @@
     ;; ── Layer: Base ─────────────────────────────────
     ;; Normal typing — new keys pass through as _
     ;;
-    ;;  Tab   Q    W    E    R    T    Y    U    I    O    P
-    ;;  Esc/  A    S    D    F    G    H    J    K    L    ;    Mouse
-    ;;  Ctrl  ⌘    ⌥    ⇧    ^              ^    ⇧    ⌥    ⌘   tap/hold
+    ;;  Nav/  Q    W    E    R    T    Y    U    I    O    P
+    ;;  Tab   Esc/  A    S    D    F    G    H    J    K    L    ;    Mouse
+    ;;  hold  Ctrl  ⌘    ⌥    ⇧    ^              ^    ⇧    ⌥    ⌘   tap/hold
     ;;        Z    X    C    V    B    N    M    ,    .    /
-    ;;                          Nav(hold)/Space(tap)
+    ;;                          Mouse(hold)/Space(tap)
     ;;
     (deflayer base
-      _        _       _       _       _       _       _       _       _       _       _
+      @nav-tab _       _       _       _       _       _       _       _       _       _
       @escctrl @a-mod  @s-mod  @d-mod  @f-mod  _       _       @j-mod  @k-mod  @l-mod  @;-mod  @mou-ralt
                _       _       _       _       _       _       _       _       _       _
-                                        @nav-spc
+                                        @mou-spc
     )
 
     ;; ── Layer: Navigation ───────────────────────────
     ;; Vim arrows on HJKL, editing keys, clipboard
-    ;; (Temporary — release Space to return to base)
+    ;; (Temporary — release Tab to return to base)
     ;;
     ;;  Tab   Q    W    E    R    T    Home PgDn PgUp End   P
     ;;  CapsW  A    S    D    F    G    ←    ↓    ↑    →    ;   RAlt
@@ -142,6 +145,7 @@
     ;; Left hand = fast movement (SDF) + clicks (A/R) + middle (T)
     ;; Right hand = precise movement (HJKL) + scroll (UIYO)
     ;; Exit: Caps/Esc or Right Alt → returns to base
+    ;; (Temporary — release Space to return to base)
     ;;
     ;;  Tab   Q     W     E     R      T    ScL  ScU  ScD  ScR    P
     ;; Exit  LClk   ·    ↑Acc  RClk  MClk   ←    ↓    ↑    →    ·   Exit

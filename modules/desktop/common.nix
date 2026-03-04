@@ -9,7 +9,7 @@
   };
 
   services.xserver.displayManager.sessionCommands = ''
-    ${pkgs.xorg.xsetroot}/bin/xsetroot -xcf ${pkgs.bibata-cursors}/share/icons/Bibata-Original-Classic/cursors/left_ptr 24
+    ${pkgs.xsetroot}/bin/xsetroot -xcf ${pkgs.bibata-cursors}/share/icons/Bibata-Original-Classic/cursors/left_ptr 24
   '';
 
   environment.sessionVariables = {

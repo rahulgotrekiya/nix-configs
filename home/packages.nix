@@ -18,6 +18,7 @@
     pinentry-tty
 
     # Other
+    vscode
     obsidian
     lazygit
     telegram-desktop

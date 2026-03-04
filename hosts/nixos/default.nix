@@ -101,13 +101,6 @@
     KERNEL=="uinput", MODE="0660", GROUP="uinput", OPTIONS+="static_node=uinput"
   '';
 
-  # VirtualBox
-  virtualisation.virtualbox.host = {
-    enable = true;
-    enableExtensionPack = true;
-  };
-  users.extraGroups.vboxusers.members = [ "rahul" ];
-
   # NTFS work partition
   fileSystems."/mnt/work" = {
     device = "/dev/disk/by-uuid/8246945646944D33";
@@ -161,7 +154,6 @@
     gcc
     awscli
     easyeffects
-    vagrant
     php
     mariadb
   ];
