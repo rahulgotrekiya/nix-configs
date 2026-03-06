@@ -25,14 +25,16 @@
         useOSProber = true;
       };
     };
-    kernelParams = [ "quiet" "loglevel=3" ];
+    kernelParams = [ "quiet" "loglevel=3" "resume=/dev/disk/by-uuid/9b315aed-860d-42e9-8519-aead7b91b6c0" ];
   };
 
-  # Lid switch behavior
+  # Lid switch behavior — using hibernate instead of suspend
+  # (HP Victus BIOS doesn't support S3 sleep properly with NVIDIA)
   services.logind.settings.Login = {
-    HandleLidSwitch = "suspend";
-    HandleLidSwitchExternalPower = "suspend";
+    HandleLidSwitch = "hibernate";
+    HandleLidSwitchExternalPower = "hibernate";
     HandleLidSwitchDocked = "ignore";
+    HandlePowerKey = "hibernate";
   };
 
   # Auto upgrade

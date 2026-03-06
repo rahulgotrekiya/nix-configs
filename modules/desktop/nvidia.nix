@@ -24,7 +24,7 @@
     open = true;
     powerManagement = {
       enable = true;
-      finegrained = true;
+      # finegrained = true;  # Disabled: conflicts with suspend on some hybrid laptops
     };
     
     # Prime configuration for hybrid Intel + NVIDIA graphics
@@ -68,6 +68,13 @@
     '')
   ];
 
-  # Add a boot parameter to enable proper power management
-  boot.kernelParams = [ "nvidia.NVreg_PreserveVideoMemoryAllocations=1" ];
+  # NVIDIA suspend/resume fix for s2idle (modern standby)
+  # This laptop's BIOS only supports s2idle, NOT S3 deep sleep
+  boot.kernelParams = [
+    "nvidia.NVreg_PreserveVideoMemoryAllocations=1"  # Save VRAM on suspend
+    "nvidia.NVreg_EnableS0ixPowerManagement=1"        # Enable s2idle support for NVIDIA
+  ];
+
+  # Keep NVIDIA driver loaded to prevent state loss
+  hardware.nvidia.nvidiaPersistenced = true;
 }
