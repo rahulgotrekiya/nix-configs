@@ -1,11 +1,14 @@
-{ config, pkgs, ... }:
+{ config, pkgs, meta, ... }:
 
+let
+  user = meta.user;
+in
 {
   sops = {
     defaultSopsFile = ./homelab/services.yaml;
     
     age = {
-      keyFile = "/home/neo/.config/sops/age/keys.txt";
+      keyFile = "/home/${user}/.config/sops/age/keys.txt";
       
       # Generate key from SSH key if it doesn't exist
       generateKey = true;
@@ -15,7 +18,7 @@
     secrets = {
       # Transmission
       "transmission/env" = {
-        owner = "neo";
+        owner = user;
         mode = "0400";
       };
 

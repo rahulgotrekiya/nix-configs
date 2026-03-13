@@ -1,5 +1,5 @@
 {
-  description = "My NixOS configuration";
+  description = "NixOS configs — multi-host, multi-user";
 
   inputs = {
     nixpkgs.url = "nixpkgs/nixos-unstable";
@@ -13,62 +13,36 @@
 
   outputs = { self, nixpkgs, home-manager, sops-nix, ... }:
     let
-      system = "x86_64-linux";
-      lib = nixpkgs.lib;
-      pkgs = nixpkgs.legacyPackages.${system};
-
-      # Helper — define a host in one line
-      mkHost = { hostname, user ? "rahul", homeModule ? null, extraModules ? [] }:
-        lib.nixosSystem {
-          inherit system;
-          specialArgs = { meta = { inherit hostname; }; };
-          modules = [
-            ./hosts/${hostname}
-            ./modules/base.nix
-            sops-nix.nixosModules.sops
-          ]
-          ++ lib.optionals (homeModule != null) [
-            home-manager.nixosModules.home-manager
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.users.${user} = import homeModule;
-            }
-          ]
-          ++ extraModules;
-        };
+      myLib = import ./lib {
+        inherit nixpkgs home-manager sops-nix;
+        src = self;
+      };
     in {
       nixosConfigurations = {
         # Laptop (HP Victus)
-        nixos = mkHost {
-          hostname = "nixos";
-          homeModule = ./home;
-          extraModules = [];
+        victus = myLib.mkHost {
+          hostname = "victus";
+          user     = "rahul";
+          homeModule = ./users/rahul;
         };
 
         # Homelab (HP ENVY x360)
-        homelab = mkHost {
+        homelab = myLib.mkHost {
           hostname = "homelab";
-          user = "neo";
+          user     = "neo";
+          homeModule = ./users/neo;
           extraModules = [
-            ./modules/server/docker.nix
-            ./modules/server/media-server.nix
-            ./modules/server/monitoring.nix
-            ./modules/server/networking.nix
-            ./modules/server/file-sharing.nix
-            ./modules/server/cloudflare-tunnel.nix
-            ./modules/server/filebrowser.nix
-            ./modules/server/glance.nix
-            ./modules/server/immich.nix
+            ./modules/nixos/server
             ./secrets/sops.nix
           ];
         };
 
         # To add a new host:
-        # myhost = mkHost {
-        #   hostname = "myhost";
-        #   homeModule = ./home;             # optional
-        #   extraModules = [ ./modules/server/docker.nix ];
+        # myhost = myLib.mkHost {
+        #   hostname    = "myhost";
+        #   user        = "username";
+        #   homeModule  = ./users/username;    # optional
+        #   extraModules = [];                 # optional
         # };
       };
     };

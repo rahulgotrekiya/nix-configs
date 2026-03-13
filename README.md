@@ -2,11 +2,12 @@
   <h1 align="center">❄️ My NixOs Configs ❄️<p align="center" dir="auto"> </p></h1>
 </div>
 
-This repository contains my personal Nix configuration for **two machines** — a laptop and a homelab server. It uses Nix flakes, Home Manager (integrated as a NixOS module), and sops-nix for secrets. Everything is reproducible and deployable with a single command.
+This repository contains my personal Nix configuration for **two machines** - a laptop and a homelab server. It uses Nix flakes, Home Manager (integrated as a NixOS module), and sops-nix for secrets. Everything is reproducible and deployable with a single command.
 
 ---
 
 ## ⚡ Screenshots
+
 <div align="center">
   <img  align="center" src="https://github.com/user-attachments/assets/7a398c64-6659-4a14-bb7b-fec38b3dc40c" width="800">
 </div>
@@ -17,38 +18,48 @@ This repository contains my personal Nix configuration for **two machines** — 
 
 ## 🖥️ Machines
 
-| Host | Machine | CPU | GPU | Role |
-|---|---|---|---|---|
-| `nixos` | HP Victus 15 | i5-12450H | RTX 2050 | Daily driver laptop (Hyprland + GNOME) |
-| `homelab` | HP ENVY x360 | i5-6200U | Intel HD 520 | Home server (Jellyfin, *arr stack, Grafana) |
+| Host      | Machine      | CPU       | GPU          | Role                                         |
+| --------- | ------------ | --------- | ------------ | -------------------------------------------- |
+| `victus`   | HP Victus 15 | i5-12450H | RTX 2050     | Daily driver laptop (Hyprland + GNOME)       |
+| `homelab` | HP ENVY x360 | i5-6200U  | Intel HD 520 | Home server (Jellyfin, \*arr stack, Grafana) |
 
 ## 📁 Structure
 
 ```
 dotfiles/
-├── flake.nix              # Entry point — mkHost helper, one line per host
+├── flake.nix                    # Entry point — one line per host
+├── lib/                         # mkHost helper & shared functions
 │
-├── hosts/                 # Per-machine config (ONLY host-specific stuff)
-│   ├── nixos/             # Laptop — boot, audio, docker, LAMP, battery
-│   └── homelab/           # Server — lid ignore, SSH, transcoding, firewall
+├── hosts/                       # Per-machine config (ONLY host-specific stuff)
+│   ├── victus/                  #   Laptop — boot, audio, docker, LAMP, battery
+│   └── homelab/                 #   Server — lid ignore, SSH, transcoding, firewall
 │
-├── modules/               # Shared & opt-in NixOS modules
-│   ├── base.nix           # Applied to ALL hosts (timezone, locale, git, tailscale)
-│   ├── desktop/           # Laptop-only (gnome, kde, hyprland, nvidia)
-│   └── server/            # Server-only (docker, jellyfin, monitoring, nginx)
+├── modules/
+│   ├── nixos/                   # System-level NixOS modules
+│   │   ├── base.nix             #   Applied to ALL hosts (timezone, locale, git, tailscale)
+│   │   ├── desktop/             #   Laptop-only (gnome, kde, hyprland, nvidia)
+│   │   └── server/              #   Server-only (docker, jellyfin, monitoring, nginx)
+│   └── home/                    # Home-manager modules (user-level)
+│       ├── shell.nix            #   Zsh, aliases, oh-my-posh
+│       ├── default.nix          #   Common CLI packages + imports
+│       ├── programs/            #   alacritty, git, neovim, tmux, kitty, yazi
+│       ├── desktop/             #   GNOME dconf settings
+│       └── wm/                  #   Hyprland, waybar, dunst, scripts
 │
-├── home/                  # Home Manager config (integrated into nixos-rebuild)
-│   ├── default.nix        # Entry point
-│   ├── shell.nix          # Zsh, aliases, oh-my-posh
-│   ├── programs/          # alacritty, git, neovim, tmux, kitty, yazi
-│   ├── wm/hyprland/       # Waybar, mako, scripts, swaync
-│   └── themes/            # Prompt theme, wallpapers
+├── users/                       # Per-user profiles
+│   ├── rahul/                   #   Full desktop user (imports all home modules)
+│   └── neo/                     #   Minimal server user (shell + programs only)
 │
-└── secrets/               # sops-nix encrypted secrets
-    ├── sops.nix
-    ├── common/
-    └── homelab/
+├── assets/                      # Wallpapers, oh-my-posh theme
+└── secrets/                     # sops-nix encrypted secrets
 ```
+
+## 🧩 Key Design Decisions
+
+- **`meta.user`** is passed to all modules via `specialArgs` — **zero hardcoded usernames** anywhere
+- **`config.time.timeZone`** is set once in `base.nix` and reused by all containers
+- **Server module aggregator** — add a new service by creating a `.nix` file in `modules/nixos/server/`, no `flake.nix` edits needed
+- **Per-user profiles** in `users/` — each user selects which home modules to import (desktop user vs. server user)
 
 ## ⚙️ Usage
 
@@ -70,13 +81,13 @@ cd ~/dotfiles
 Replace the hardware config with your own:
 
 ```bash
-cp /etc/nixos/hardware-configuration.nix hosts/nixos/hardware.nix
+cp /etc/nixos/hardware-configuration.nix hosts/victus/hardware.nix
 ```
 
 Build & apply - **one command does everything** (system + home-manager):
 
 ```bash
-sudo nixos-rebuild switch --flake .#nixos
+sudo nixos-rebuild switch --flake .#victus
 ```
 
 For the homelab (remotely via SSH):
@@ -86,8 +97,6 @@ nixos-rebuild switch --flake .#homelab --target-host neo@homelab --use-remote-su
 ```
 
 ## ➕ Adding a New Host
-
-Adding a new machine is a 4-step process:
 
 **1. Create the host directory:**
 
@@ -108,11 +117,16 @@ nixos-generate-config --show-hardware-config > hosts/myhost/hardware.nix
 { config, pkgs, meta, ... }:
 {
   imports = [ ./hardware.nix ];
-  
+
   # Only what's unique to this host goes here.
   # Shared config (timezone, git, nix settings, tailscale)
-  # is automatically applied from modules/base.nix
-  
+  # is automatically applied from modules/nixos/base.nix
+
+  users.users.${meta.user} = {
+    isNormalUser = true;
+    extraGroups = [ "wheel" ];
+  };
+
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
@@ -124,9 +138,9 @@ nixos-generate-config --show-hardware-config > hosts/myhost/hardware.nix
 
 ```nix
 nixosConfigurations = {
-  nixos   = mkHost { hostname = "nixos"; homeModule = ./home; };
-  homelab = mkHost { hostname = "homelab"; user = "neo"; extraModules = [...]; };
-  myhost  = mkHost { hostname = "myhost"; };  # ← just this line
+  victus  = myLib.mkHost { hostname = "victus";  user = "rahul"; homeModule = ./users/rahul; };
+  homelab = myLib.mkHost { hostname = "homelab"; user = "neo";   extraModules = [...]; };
+  myhost  = myLib.mkHost { hostname = "myhost";  user = "myuser"; };  # ← just this line
 };
 ```
 
@@ -136,27 +150,52 @@ Then deploy:
 sudo nixos-rebuild switch --flake .#myhost
 ```
 
+## 👤 Adding a New User
+
+Create a profile at `users/myuser/default.nix`:
+
+```nix
+{ config, pkgs, meta, ... }:
+{
+  imports = [
+    ../../modules/home            # shell + packages + theme
+    ../../modules/home/programs   # git, tmux, neovim, etc.
+    # ../../modules/home/desktop  # GNOME dconf (desktop only)
+    # ../../modules/home/wm       # Hyprland (desktop only)
+  ];
+
+  home.username = meta.user;
+  home.homeDirectory = "/home/${meta.user}";
+  home.stateVersion = "24.05";
+  programs.home-manager.enable = true;
+}
+```
+
+Then reference it in `flake.nix` via `homeModule = ./users/myuser;`.
+
 ## 🔑 Home Manager
 
-Home Manager is **integrated as a NixOS module** - no separate `home-manager switch` needed. When you run `nixos-rebuild switch`, it builds both system config and user environment atomically.
+Home Manager is **integrated as a NixOS module** — no separate `home-manager switch` needed. When you run `nixos-rebuild switch`, it builds both system config and user environment atomically.
 
-This is configured in `flake.nix` via the `mkHost` helper:
+This is configured in `lib/default.nix` via the `mkHost` helper:
 
 ```nix
 mkHost = { hostname, user ? "rahul", homeModule ? null, ... }:
   lib.nixosSystem {
+    specialArgs = { meta = { inherit hostname user; }; };
     modules = [
       home-manager.nixosModules.home-manager
       {
         home-manager.useGlobalPkgs = true;
         home-manager.useUserPackages = true;
         home-manager.users.${user} = import homeModule;
+        home-manager.extraSpecialArgs = { meta = { inherit hostname user; }; };
       }
     ];
   };
 ```
 
-Pass `homeModule = ./home;` to enable it for a host, or omit it for headless servers.
+Pass `homeModule = ./users/username;` to enable it for a host, or omit it for headless servers.
 
 ---
 

@@ -36,8 +36,8 @@
   # Console
   console.font = "Lat2-Terminus16";
 
-  # User account
-  users.users.neo = {
+  # User account — uses meta.user instead of hardcoded "neo"
+  users.users.${meta.user} = {
     isNormalUser = true;
     extraGroups = [ "wheel" "docker" "networkmanager" ];
     packages = with pkgs; [ tree ];
