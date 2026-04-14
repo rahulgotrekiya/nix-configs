@@ -15,7 +15,6 @@
 
     # Program variables
     "$term" = "kitty";
-    "$scrPath" = "$HOME/.local/bin";
 
     bind = [
       # Terminal and applications
@@ -34,14 +33,14 @@
       # Custom scripts
       "$mainMod, G, exec, pkill waybar || waybar"
       "$mainMod SHIFT, T, exec, hyprctl dispatch workspaceopt allfloat"
-      "$mainMod SHIFT, P, exec, $scrPath/windowpin.sh"
-      "$mainMod Alt, G, exec, $scrPath/gamemode.sh"
+      "$mainMod SHIFT, P, exec, windowpin"
+      "$mainMod Alt, G, exec, gamemode"
 
       # Rofi menu
-      "$mainMod, B, exec, pkill -x rofi || $scrPath/rofi-bluetooth"
-      "$mainMod, V, exec, pkill -x rofi || $scrPath/clipboard-manager -c"
-      "$mainMod SHIFT, V, exec, pkill -x rofi || $scrPath/clipboard-manager -d"
-      "$mainMod ALT, V, exec, pkill -x rofi || $scrPath/clipboard-manager -w"
+      "$mainMod, B, exec, pkill -x rofi || rofi-bluetooth"
+      "$mainMod, V, exec, pkill -x rofi || clipboard-manager -c"
+      "$mainMod SHIFT, V, exec, pkill -x rofi || clipboard-manager -d"
+      "$mainMod ALT, V, exec, pkill -x rofi || clipboard-manager -w"
       "$mainMod, space, exec, pkill -x rofi || rofi -show drun -font \"JetBrains Mono Nerd Font Semi-Bold 16\""
 
       # Run on dedicated GPU
@@ -147,11 +146,11 @@
       ", XF86AudioMute, exec, pactl set-sink-mute @DEFAULT_SINK@ toggle"
 
       # Screenshot
-      ", Print, exec, $scrPath/screenshot p"
-      "SHIFT, Print, exec, $scrPath/screenshot s"
-      "CTRL, Print, exec, $scrPath/screenshot sf"
-      "$mainMod, Print, exec, $scrPath/screenshot"
-      "$mainMod SHIFT, Print, exec, $scrPath/screenshot v"
+      ", Print, exec, screenshot p"
+      "SHIFT, Print, exec, screenshot s"
+      "CTRL, Print, exec, screenshot sf"
+      "$mainMod, Print, exec, screenshot"
+      "$mainMod SHIFT, Print, exec, screenshot v"
 
       # Color picker
       "$mainMod SHIFT, C, exec, hyprpicker -a"

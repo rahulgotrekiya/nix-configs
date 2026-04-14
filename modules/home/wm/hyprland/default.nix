@@ -1,9 +1,9 @@
-# Hyprland home-manager aggregator — hyprpaper, hypr config, waybar, scripts, dunst
+# Hyprland home-manager aggregator — wallpaper, hypr config, waybar, scripts, dunst
 { ... }:
 
 {
   imports = [
-    ./hyprpaper.nix
+    ./wallpaper.nix
     ./hypr
     ./waybar
     ./scripts

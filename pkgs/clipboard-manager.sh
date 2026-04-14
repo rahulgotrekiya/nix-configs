@@ -8,6 +8,7 @@
 
 # ------ Configuration ------
 # Get script directory for relative paths
+# shellcheck disable=SC2034
 SCRIPT_DIR=$(dirname "$(realpath "$0")")
 
 # Configuration paths
@@ -20,8 +21,10 @@ ROFI_FONT_CONFIG="configuration {font: \"JetBrainsMono Nerd Font ${ROFI_SCALE}\"
 
 # Border settings
 HYPR_BORDER=${HYPR_BORDER:-1}
+# shellcheck disable=SC2034
 WINDOW_BORDER=$((HYPR_BORDER * 3 / 2))
-ELEMENT_BORDER=$([ $HYPR_BORDER -eq 0 ] && echo "5" || echo $HYPR_BORDER)
+# shellcheck disable=SC2034
+ELEMENT_BORDER=$([ "$HYPR_BORDER" -eq 0 ] && echo "5" || echo "$HYPR_BORDER")
 
 # ------ Center Positioning for Rofi ------
 # Force rofi to be centered on screen
@@ -30,7 +33,8 @@ CENTER_OVERRIDE="window {location: center; anchor: center; x-offset: 0; y-offset
 # ------ Helper Functions ------
 show_rofi_menu() {
     local placeholder="$1"
-    local history_items=$(cliphist list)
+    local history_items
+    history_items=$(cliphist list)
     
     # Check if clipboard history is empty
     if [ -z "$history_items" ]; then
@@ -77,7 +81,8 @@ get_active_window() {
 # Function to simulate paste in the active window
 simulate_paste() {
     # Get active window
-    local window_id=$(get_active_window)
+    local window_id
+    window_id=$(get_active_window)
     
     if [ -n "$window_id" ]; then
         if command -v wtype &> /dev/null; then

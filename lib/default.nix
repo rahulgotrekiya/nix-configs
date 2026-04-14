@@ -30,6 +30,7 @@ in
         };
       };
       modules = [
+        { nixpkgs.overlays = [ (import (src + "/overlays")) ]; }
         (src + "/hosts/${hostname}")
         (src + "/modules/nixos/base.nix")
         sops-nix.nixosModules.sops

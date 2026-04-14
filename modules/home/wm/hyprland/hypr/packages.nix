@@ -9,7 +9,6 @@
     waybar
     wl-clipboard
     cliphist
-    hyprpaper
     pyprland
     hyprpicker
     rofi
