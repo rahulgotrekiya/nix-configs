@@ -13,5 +13,6 @@
     ./filebrowser.nix
     ./glance.nix
     ./immich.nix
+    ./utsuru.nix
   ];
 }
