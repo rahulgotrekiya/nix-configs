@@ -60,6 +60,7 @@
             ./modules/server/filebrowser.nix
             ./modules/server/glance.nix
             ./modules/server/immich.nix
+            ./modules/server/utsuru.nix
             ./secrets/sops.nix
           ];
         };
