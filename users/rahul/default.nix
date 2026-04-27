@@ -36,9 +36,12 @@
     telegram-desktop
     libnotify
     antigravity
+    jetbrains.pycharm
 
     # Development
     nodejs
+    python3
+    python3Packages.pip
 
     # Fonts
     inter

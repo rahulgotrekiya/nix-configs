@@ -11,6 +11,9 @@
     # LAMP stack for local web development
     ../../modules/nixos/desktop/lamp.nix
 
+    # Temporary VM setup (Vagrant + libvirt + virt-manager)
+    ../../modules/nixos/desktop/vagrant.nix
+
     # Laptop-specific modules
     ./battery-monitor.nix
    ];
