@@ -8,7 +8,6 @@
       "wl-paste --type text --watch cliphist store"
       "wl-paste --type image --watch cliphist store"
       "powernotd"
-      "hyprpaper"
       "pypr"
       "hyprctl setcursor \"Bibata-Original-Classic\" 35"
     ];

@@ -25,6 +25,7 @@
   gtk = {
     enable = true;
     gtk3.extraConfig.gtk-application-prefer-dark-theme = true;
+    gtk4.theme = null;
   };
 
   # Desktop-only packages (not on server)
@@ -35,9 +36,12 @@
     telegram-desktop
     libnotify
     antigravity
+    jetbrains.pycharm
 
     # Development
     nodejs
+    python3
+    python3Packages.pip
 
     # Fonts
     inter
@@ -52,6 +56,7 @@
   ];
 
   # Personal git identity (moved from shared git.nix module)
+  programs.git.signing.format = null;
   programs.git.settings = {
     user = {
       name = "rahul gotrekiya";

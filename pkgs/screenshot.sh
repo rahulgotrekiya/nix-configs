@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 # Check for required commands
 check_command() {
@@ -34,13 +34,13 @@ save_dir="${2:-$XDG_PICTURES_DIR/Screenshots}"
 save_file=$(date +'%y%m%d_%Hh%Mm%Ss_screenshot.png')
 temp_screenshot="/tmp/screenshot.png"
 
-mkdir -p $save_dir
+mkdir -p "$save_dir"
 
 # Check for swappy and set up its config if available
 if check_command "swappy"; then
     swpy_dir="$HOME/.config/swappy"
-    mkdir -p $swpy_dir
-    echo -e "[Default]\nsave_dir=$save_dir\nsave_filename_format=$save_file" > $swpy_dir/config
+    mkdir -p "$swpy_dir"
+    echo -e "[Default]\nsave_dir=$save_dir\nsave_filename_format=$save_file" > "$swpy_dir/config"
 fi
 
 # Screenshot functions
@@ -129,6 +129,7 @@ view_screenshots() {
     
     if [ -n "$selected" ]; then
         # Extract filename from selection
+        # shellcheck disable=SC2001
         filename=$(echo "$selected" | sed 's/.*- \(.*\)$/\1/')
         file_path="${save_dir}/${filename}"
         

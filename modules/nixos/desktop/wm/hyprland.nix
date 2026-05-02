@@ -19,9 +19,6 @@
     # Status bar
     waybar
 
-    # Wallpaper
-    hyprpaper
-
     # Idle management
     swayidle
     swaylock-effects
