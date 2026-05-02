@@ -25,6 +25,8 @@ let
     "torrent"  = { port = 9091; };                          # Transmission
     "files"    = { port = 8092; };                          # File Browser
     "sync"     = { port = 8384; };                          # Syncthing
+    "utsuru"   = { port = 4096; };                          # Utsuru Dashboard
+    "aria2"    = { port = 6800; };                          # aria2 RPC
   };
 
   # Helper: subdomain string → full hostname
