@@ -11,8 +11,14 @@
     # LAMP stack for local web development
     ../../modules/nixos/desktop/lamp.nix
 
+    # Terraform IaC learning setup
+    ../../modules/nixos/desktop/terraform.nix
+
+    # Ansible configuration management learning setup
+    ../../modules/nixos/desktop/ansible.nix
+
     # Temporary VM setup (Vagrant + libvirt + virt-manager)
-    ../../modules/nixos/desktop/vagrant.nix
+    # ../../modules/nixos/desktop/vagrant.nix
 
     # Laptop-specific modules
     ./battery-monitor.nix
