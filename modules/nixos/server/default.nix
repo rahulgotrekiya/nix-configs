@@ -14,6 +14,5 @@
     ./glance.nix
     ./immich.nix
     ./utsuru.nix
-    ./watchtower.nix
   ];
 }
