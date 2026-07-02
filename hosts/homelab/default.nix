@@ -44,7 +44,7 @@
     packages = with pkgs; [ tree ];
     hashedPasswordFile = config.sops.secrets."neo_user/hashed_password".path;
     openssh.authorizedKeys.keys = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIA06yTbPT4X1rDLYi7JMFQKvmy5zuCfSTkGDNeyccoNB rahulgotrekiya@gmail.com"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILdSbdL7m/EWQSVg5uhjA8Y0yCLrEBu8ik2XnVZ/bLMQ rahulgotrekiya@gmail.com"
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKhgU+fyofY/2xfmyPZflpLG172Gjze5V5T74/+R8AO3 u0_a324@localhost"
     ];
   };
