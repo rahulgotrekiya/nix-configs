@@ -1,0 +1,127 @@
+console_title_template = '{{ .Shell }} in {{ .Folder }}'
+version = 3
+final_space = true
+
+[palette]
+  blue    = '#57C7FF'
+  cyan    = '#9AEDFE'
+  fore    = '#6c6c6c'
+  grey    = '242'
+  magenta = '#FF6AC1'
+  purple  = '#a074c4'
+  red     = '#FF5C57'
+  white   = '#F1F1F0'
+  yellow  = '#F3F99D'
+  yellow2 = '#FFD664'
+
+[secondary_prompt]
+  template   = '❯❯ '
+  foreground = 'magenta'
+  background = 'transparent'
+
+[transient_prompt]
+  template   = '❯ '
+  background = 'transparent'
+  foreground_templates = [
+    '{{if gt .Code 0}}p:red{{end}}',
+    '{{if eq .Code 0}}p:magenta{{end}}'
+  ]
+
+[[blocks]]
+  type      = 'prompt'
+  alignment = 'left'
+  newline   = true
+
+  [[blocks.segments]]
+    template   = '<b>{{ .Path }}</b>'
+    foreground = 'p:blue'
+    background = 'transparent'
+    type       = 'path'
+    style      = 'plain'
+
+    [blocks.segments.properties]
+      style = 'full'
+
+  [[blocks.segments]]
+    template   = ' {{ .HEAD }}{{ if or (.Working.Changed) (.Staging.Changed) }}*{{ end }}<cyan>{{ if gt .Behind 0 }} ⇣{{ end }}{{ if gt .Ahead 0 }} ⇡{{ end }}</>'
+    foreground = 'fore'
+    background = 'transparent'
+    type       = 'git'
+    style      = 'plain'
+
+    [blocks.segments.properties]
+      branch_icon  = '󰘬 '
+      commit_icon  = '@'
+      fetch_status = true
+      tag_icon     = ' '
+
+  [[blocks.segments]]
+    template   = '  {{ .Full }}'
+    foreground = 'purple'
+    background = 'transparent'
+    type       = 'php'
+    style      = 'plain'
+
+  [[blocks.segments]]
+    template   = '  {{ .Full }}'
+    foreground = 'p:blue'
+    background = 'transparent'
+    type       = 'lua'
+    style      = 'plain'
+
+  [[blocks.segments]]
+    template   = '  {{ .Context }}'
+    foreground = 'p:blue'
+    background = 'transparent'
+    type       = 'docker'
+    style      = 'plain'
+
+  [[blocks.segments]]
+    template   = '  {{ .Full }}'
+    foreground = 'p:blue'
+    background = 'transparent'
+    type       = 'java'
+    style      = 'plain'
+
+[[blocks]]
+  type     = 'rprompt'
+  overflow = 'hidden'
+
+  [[blocks.segments]]
+    template   = '{{.Icon}} '
+    foreground = 'p:blue'
+    type       = 'os'
+    style      = 'plain'
+
+  [[blocks.segments]]
+    template   = ' {{ .FormattedMs }}'
+    foreground = 'p:yellow'
+    background = 'transparent'
+    type       = 'executiontime'
+    style      = 'plain'
+
+    [blocks.segments.properties]
+      threshold = 5000
+
+  [[blocks.segments]]
+    foreground = 'fore'
+    type       = 'time'
+    style      = 'plain'
+
+    [blocks.segments.properties]
+      time_format = '15:04:05'
+
+[[blocks]]
+  type      = 'prompt'
+  alignment = 'left'
+  newline   = true
+
+  [[blocks.segments]]
+    template   = '❯'
+    background = 'transparent'
+    type       = 'text'
+    style      = 'plain'
+    foreground_templates = [
+      '{{if gt .Code 0}}p:red{{end}}',
+      '{{if eq .Code 0}}p:magenta{{end}}'
+    ]
