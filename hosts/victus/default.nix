@@ -1,12 +1,18 @@
 # HP Victus — laptop-specific NixOS configuration
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, username, ... }:
 
 {
   imports = [
     ./hardware-configuration.nix
-    ../../modules/nvidia.nix
-    ../../modules/virtualisation.nix
-    ../../modules/flatpak.nix
+    ../../modules/desktop/nvidia.nix
+    ../../modules/desktop/virtualisation.nix
+    ../../modules/desktop/flatpak.nix
+    ../../modules/desktop/kanata.nix
+    ../../modules/desktop/packet-tracer.nix
+    ../../modules/desktop/lamp.nix
+    # DevOps toolchains — uncomment when needed
+    # ../../modules/desktop/terraform.nix
+    # ../../modules/desktop/ansible.nix
   ];
 
   # Bootloader (GRUB for dual-boot)
@@ -31,10 +37,14 @@
       "loglevel=3"
       "nvidia.NVreg_PreserveVideoMemoryAllocations=1"
       "nvidia.NVreg_EnableS0ixPowerManagement=1"
+      "nvidia-drm.fbdev=1"                              # enable dGPU framebuffer for HDMI output
     ];
 
     # Required for KVM virtualisation
     kernelModules  = [ "kvm-intel" ];
+
+    # Explicitly set resume device to the swap partition so the swapfile below isn't picked by mistake
+    resumeDevice = "/dev/disk/by-uuid/b19c406e-409c-4350-914d-772a1b62e88e";
   };
 
   # Lid switch behavior — using hibernate instead of suspend
@@ -54,14 +64,6 @@
   };
   systemd.tmpfiles.rules = [ "d /mnt/work 0755 root root -" ];
 
-  # Auto upgrade
-  system.autoUpgrade = {
-    enable = true;
-    dates = "weekly";
-  };
-
-  networking.hostName = "victus";
-
   i18n.supportedLocales = [ "en_US.UTF-8/UTF-8" "en_IN/UTF-8" ];
   i18n.extraLocaleSettings = {
     LC_ADDRESS = "en_US.UTF-8";
@@ -74,8 +76,7 @@
     LC_TELEPHONE = "en_US.UTF-8";
     LC_TIME = "en_US.UTF-8";
   };
-  
-  
+
   # Shell
   # Must be enabled at system level alongside home-manager's programs.zsh
   programs.zsh.enable        = true;
@@ -83,7 +84,7 @@
   users.defaultUserShell     = pkgs.zsh;
 
   # User account
-  users.users.rahul = {
+  users.users.${username} = {
     isNormalUser = true;
     description  = "Rahul Gotrekiya";
     extraGroups  = [ "networkmanager" "wheel" ];
@@ -119,6 +120,16 @@
   # Printing
   services.printing.enable = true;
 
+  # Grant WebHID access to the Cosmic Byte Helios mouse (config interface is
+  # root-only hidraw by default). VID a8a4 = Helios (YJX-CHIP controller); a8a5
+  # covers the dongle/BT variant. We grant via GROUP="users" + MODE 0660 (rahul
+  # is in "users"), which works regardless of rule ordering. uaccess is kept as
+  # a bonus but is unreliable from 99-local.rules (seat-late runs earlier).
+  services.udev.extraRules = ''
+    KERNEL=="hidraw*", SUBSYSTEM=="hidraw", ATTRS{idVendor}=="a8a4", GROUP="users", MODE="0660", TAG+="uaccess"
+    KERNEL=="hidraw*", SUBSYSTEM=="hidraw", ATTRS{idVendor}=="a8a5", GROUP="users", MODE="0660", TAG+="uaccess"
+  '';
+
   # Firefox
   programs.firefox.enable = true;
 
@@ -127,6 +138,14 @@
   environment.systemPackages = with pkgs; [
     fastfetch
   ];
+
+  # Add a swap file to avoid hibernation ENOSPC errors (-28)
+  # This gives normal system usage a place to swap, leaving the partition empty for hibernation.
+  swapDevices = [{
+    device = "/var/lib/swapfile";
+    size = 8192; # 8 GB
+    priority = 100; # Higher priority ensures this is used before the partition
+  }];
 
   system.stateVersion = "26.05";
 }

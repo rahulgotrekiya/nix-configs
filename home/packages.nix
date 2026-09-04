@@ -9,9 +9,17 @@
 
     # Other
     obsidian
+    gnome-tweaks
+
+    antigravity-ide
+    vscode
+    claude-code
+    nodejs # required by claude-code plugins (e.g. ponytail) whose hooks run `node`
+    google-chrome
 
     # Fonts
     nerd-fonts.jetbrains-mono
+    mona-sans
 
     (google-fonts.override {
       fonts = [

@@ -1,0 +1,104 @@
+# Homelab server configuration (HP ENVY x360 repurposed)
+{ config, pkgs, lib, meta, ... }:
+
+{
+  imports = [
+    ./hardware.nix
+  ];
+
+  # systemd-boot (simpler than GRUB for a server)
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
+  boot.loader.timeout = 1;
+
+  # NVMe stability
+  boot.kernelParams = [
+    "nvme.noacpi=1"
+    "nvme_core.default_ps_max_latency_us=0"
+  ];
+
+  # Server: never sleep, ignore lid
+  services.logind.settings.Login = {
+    HandleLidSwitch = "ignore";
+    HandleLidSwitchExternalPower = "ignore";
+    HandleLidSwitchDocked = "ignore";
+  };
+  systemd.sleep.settings.Sleep = {
+    AllowSuspend = "no";
+    AllowHibernation = "no";
+    AllowHybridSleep = "no";
+    AllowSuspendThenHibernate = "no";
+  };
+
+  # Tailscale — enabled here (base.nix stays minimal for the laptop) and set up
+  # as an exit node / subnet router
+  services.tailscale.enable = true;
+  services.tailscale.useRoutingFeatures = "server";
+
+  # Console
+  console.font = "Lat2-Terminus16";
+
+  # User account
+  users.users.neo = {
+    isNormalUser = true;
+    extraGroups = [ "wheel" "docker" "networkmanager" ];
+    packages = with pkgs; [ tree ];
+    hashedPasswordFile = config.sops.secrets."neo_user/hashed_password".path;
+    openssh.authorizedKeys.keys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILdSbdL7m/EWQSVg5uhjA8Y0yCLrEBu8ik2XnVZ/bLMQ rahulgotrekiya@gmail.com"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKhgU+fyofY/2xfmyPZflpLG172Gjze5V5T74/+R8AO3 u0_a324@localhost"
+    ];
+  };
+
+  # SSH hardened
+  services.openssh = {
+    enable = true;
+    settings = {
+      PasswordAuthentication = false;
+      PermitRootLogin = "no";
+      KbdInteractiveAuthentication = false;
+    };
+  };
+
+  # Hardware transcoding (Intel HD 520)
+  hardware.graphics = {
+    enable = true;
+    extraPackages = with pkgs; [
+      intel-media-driver
+      intel-vaapi-driver
+      libva-vdpau-driver
+      libvdpau-va-gl
+    ];
+  };
+
+  # Server packages (on top of base.nix)
+  environment.systemPackages = with pkgs; [
+    cifs-utils
+    nfs-utils
+    docker-compose
+
+    # sops tools — for managing this host's encrypted secrets
+    sops
+    age
+    ssh-to-age
+  ];
+
+  # Firewall
+  networking.firewall = {
+    enable = true;
+    allowedTCPPorts = [
+      22    # SSH
+      80    # Nginx (everything goes through this)
+      443   # HTTPS
+      53    # Blocky DNS
+      8384  # Syncthing (needs direct access)
+      51413 # Transmission peer port
+    ];
+    allowedUDPPorts = [
+      51413 # Transmission
+      53    # Blocky DNS
+    ];
+  };
+
+  system.stateVersion = "23.11";
+}

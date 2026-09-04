@@ -1,13 +1,14 @@
 # Shared base config — applied to ALL hosts
-{ pkgs, ... }:
+{ pkgs, meta, ... }:
 
 {
   # Nix daemon settings
   nix = {
     settings = {
       experimental-features = [ "nix-command" "flakes" ];
-      auto-optimise-store   = true;
     };
+    # Deduplicate identical store paths (replaces deprecated auto-optimise-store)
+    optimise.automatic = true;
     # Garbage collect old generations automatically
     gc = {
       automatic = true;
@@ -22,14 +23,8 @@
   console.keyMap     = "us";
 
   # Networking
+  networking.hostName              = meta.hostname;
   networking.networkmanager.enable = true;
-
-  # Editor
-  programs.neovim = {
-    enable        = true;
-    defaultEditor = true;
-    vimAlias      = true;
-  };
 
   # Allow unfree
   nixpkgs.config.allowUnfree = true;

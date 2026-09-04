@@ -60,30 +60,17 @@ in
 
     shellAliases = myAliases;
 
-    # Plugins via zplug
-    zplug = {
-      enable  = true;
-      plugins = [
-        { name = "zsh-users/zsh-syntax-highlighting"; }
-        { name = "zsh-users/zsh-autosuggestions"; }
-        { name = "zsh-users/zsh-completions"; }
-        { name = "Aloxaf/fzf-tab"; }
-      ];
-    };
-
-    oh-my-zsh = {
-      enable  = true;
-      plugins = [
-        "git"
-        "sudo"
-        "docker"
-        "command-not-found"
-      ];
-    };
-
     initContent = ''
-      ZSH_DISABLE_COMPFIX=true
-      export EDITOR=nvim
+      # Plugins (Nix store, no network)
+      # zsh-completions — extra fpath entries (before compinit)
+      fpath+=(${pkgs.zsh-completions}/share/zsh/site-functions)
+
+      # fzf-tab     — must be after compinit, before other wrappers
+      source ${pkgs.zsh-fzf-tab}/share/fzf-tab/fzf-tab.plugin.zsh
+      # autosuggestions
+      source ${pkgs.zsh-autosuggestions}/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+      # syntax-highlighting — always last
+      source ${pkgs.zsh-syntax-highlighting}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
       # fzf layout — set directly here so it always takes effect
       export FZF_DEFAULT_OPTS='--layout=reverse --height=~10 --no-border'
@@ -113,6 +100,23 @@ in
       bindkey '^p' history-search-backward
       bindkey '^n' history-search-forward
 
+      # Word / line navigation — restores what oh-my-zsh used to bind
+      bindkey '^[[1;5C' forward-word        # Ctrl+Right
+      bindkey '^[[1;5D' backward-word       # Ctrl+Left
+      bindkey '^[[1;3C' forward-word        # Alt+Right
+      bindkey '^[[1;3D' backward-word       # Alt+Left
+      bindkey '^[[H'    beginning-of-line   # Home
+      bindkey '^[[F'    end-of-line         # End
+      bindkey '^[[1~'   beginning-of-line   # Home (alt terminfo)
+      bindkey '^[[4~'   end-of-line         # End (alt terminfo)
+      bindkey '^[[3~'   delete-char         # Delete
+      bindkey '^[[3;5~' kill-word           # Ctrl+Delete
+      bindkey '^H'      backward-kill-word  # Ctrl+Backspace
+      # Esc Esc — prepend sudo to current command (replaces OMZ sudo plugin)
+      sudo-command-line() { [[ -z $BUFFER ]] && zle up-history; BUFFER="sudo $BUFFER"; zle end-of-line; }
+      zle -N sudo-command-line
+      bindkey '\e\e' sudo-command-line
+
       # History options
       setopt appendhistory
       setopt sharehistory
@@ -128,18 +132,18 @@ in
     enableZshIntegration = true;
 
     defaultCommand        = "fd --type f --hidden --exclude .git";
-    fileWidgetCommand     = "fd --type f --hidden --exclude .git";
-    fileWidgetOptions     = [
+    fileWidget.command     = "fd --type f --hidden --exclude .git";
+    fileWidget.options     = [
       "--preview 'bat --color=always --style=numbers --line-range=:100 {}'"
       "--preview-window 'right:55%'"
       "--bind 'ctrl-/:toggle-preview'"
     ];
-    changeDirWidgetCommand = "fd --type d --hidden --exclude .git";
-    changeDirWidgetOptions = [
+    changeDirWidget.command = "fd --type d --hidden --exclude .git";
+    changeDirWidget.options = [
       "--preview 'eza -1 --color=always {}'"
       "--preview-window 'right:40%'"
     ];
-    historyWidgetOptions = [
+    historyWidget.options = [
       "--sort"
       "--exact"
       "--preview 'echo {}'"

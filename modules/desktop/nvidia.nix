@@ -22,7 +22,7 @@
     modesetting.enable = true;
     nvidiaSettings     = true;
 
-    # Open kernel module — required for RTX 2050 (Turing+ only, kernel ≥ 5.18)
+    # Open kernel module — RTX 2050 is Ampere (GA107), fully supported
     open = true;
 
     # Power management — keeps GPU state across suspend
@@ -35,9 +35,6 @@
     # Keep NVIDIA driver loaded to prevent VRAM state loss on resume
     nvidiaPersistenced = true;
 
-    # Force correct composition pipeline (prevents tearing on external displays)
-    forceFullCompositionPipeline = true;
-
     # Driver version — stable is safest for RTX 2050
     package = config.boot.kernelPackages.nvidiaPackages.stable;
 
@@ -47,18 +44,19 @@
         enable          = true;
         enableOffloadCmd = true;
       };
+      reverseSync.enable = true;
       intelBusId  = "PCI:0:2:0";  # integrated GPU
       nvidiaBusId = "PCI:1:0:0";  # dedicated GPU
     };
   };
 
   # Session environment variables
+  # NOTE: Do NOT set GBM_BACKEND or __GLX_VENDOR_LIBRARY_NAME globally —
+  # those force all rendering through NVIDIA and break PRIME offload + reverse sync.
+  # They are set per-app via the prime-run wrapper below.
   environment.sessionVariables = {
     LIBVA_DRIVER_NAME       = "iHD";         # use Intel VA-API for video decode
-    GBM_BACKEND             = "nvidia-drm";
-    __GLX_VENDOR_LIBRARY_NAME = "nvidia";
     WLR_NO_HARDWARE_CURSORS = "1";           # fix cursor rendering on NVIDIA/Wayland
-    WLR_RENDERER            = "vulkan";
   };
 
   # prime-run helper script

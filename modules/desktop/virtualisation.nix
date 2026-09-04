@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, username, ... }:
 
 {
   virtualisation = {
@@ -14,7 +14,7 @@
     spiceUSBRedirection.enable = true;
   };
 
-  users.users.rahul.extraGroups = [ "libvirtd" "kvm" ];
+  users.users.${username}.extraGroups = [ "libvirtd" "kvm" ];
 
   environment.systemPackages = with pkgs; [
     virt-manager

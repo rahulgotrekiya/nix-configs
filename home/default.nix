@@ -1,5 +1,5 @@
 # Home Manager entry point
-{ config, pkgs, ... }:
+{ username, ... }:
 
 {
   imports = [
@@ -8,8 +8,8 @@
     ./packages.nix
   ];
 
-  home.username      = "rahul";
-  home.homeDirectory = "/home/rahul";
+  home.username      = username;
+  home.homeDirectory = "/home/${username}";
 
   # Must match the NixOS stateVersion of the fresh install
   home.stateVersion = "26.05";
