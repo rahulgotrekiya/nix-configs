@@ -1,5 +1,5 @@
 # HP Victus — laptop-specific NixOS configuration
-{ config, pkgs, lib, username, ... }:
+{ pkgs, username, ... }:
 
 {
   imports = [

@@ -1,6 +1,6 @@
 # LAMP stack — Apache + PHP + MariaDB + phpMyAdmin
 # Import this in any host that needs a local web development environment.
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 
 let
   # phpMyAdmin source + generated config, served read-only from the store.

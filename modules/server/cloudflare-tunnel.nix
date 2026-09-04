@@ -1,5 +1,5 @@
 # homelab/modules/cloudflare-tunnel.nix
-{ config, pkgs, lib, ... }:
+{ config, pkgs, ... }:
 
 {
   environment.systemPackages = [ pkgs.cloudflared ];

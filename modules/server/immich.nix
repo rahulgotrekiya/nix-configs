@@ -1,5 +1,5 @@
 # Immich - Self-hosted photo & video backup (Google Photos alternative)
-{ config, pkgs, lib, ... }:
+{ lib, ... }:
 
 {
   services.immich = {

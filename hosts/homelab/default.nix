@@ -1,5 +1,5 @@
 # Homelab server configuration (HP ENVY x360 repurposed)
-{ config, pkgs, lib, meta, ... }:
+{ config, pkgs, ... }:
 
 {
   imports = [

@@ -1,5 +1,5 @@
 # Media server configuration - Jellyfin + *arr stack
-{ config, pkgs, lib, ... }:
+{ config, lib, ... }:
 
 {
   # Create media directories

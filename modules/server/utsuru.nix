@@ -1,5 +1,5 @@
 # Utsuru - Self-hosted Jellyfin download manager
-{ config, pkgs, lib, ... }:
+{ lib, ... }:
 
 {
   # 1. Write aria2 RPC secret to a file and fix state directory ownership

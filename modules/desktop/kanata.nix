@@ -1,5 +1,5 @@
 # Uses services.kanata instead of a user systemd service to avoid /dev/uinput issues
-{ pkgs, username, ... }:
+{ username, ... }:
 
 {
   boot.kernelModules = [ "uinput" ];

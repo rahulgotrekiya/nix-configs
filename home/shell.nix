@@ -30,10 +30,9 @@ let
     # Safer defaults
     mkdir = "mkdir -p";
 
-    # NixOS rebuild shortcuts
+    # NixOS rebuild shortcuts (home-manager rebuilds together with the system)
     nrs = "sudo nixos-rebuild switch --flake ~/dotfiles#victus";
     nrb = "sudo nixos-rebuild boot   --flake ~/dotfiles#victus";
-    hms = "home-manager switch       --flake ~/dotfiles#rahul";
   };
 in
 
