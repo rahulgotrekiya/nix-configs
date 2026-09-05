@@ -120,6 +120,23 @@
   # Printing
   services.printing.enable = true;
 
+  # Fonts
+  # Pin the generic families so websites/apps using the system font stack
+  # (GitHub, etc.) fall back to clean fonts instead of DejaVu.
+  fonts = {
+    packages = with pkgs; [
+      inter                    # default UI/web sans-serif
+      noto-fonts               # broad Unicode coverage
+      noto-fonts-color-emoji   # emoji (❄️ and friends)
+    ];
+    fontconfig.defaultFonts = {
+      sansSerif = [ "Inter" "Noto Sans" ];
+      serif     = [ "Noto Serif" ];
+      monospace = [ "JetBrainsMono Nerd Font" ];
+      emoji     = [ "Noto Color Emoji" ];
+    };
+  };
+
   # Grant WebHID access to the Cosmic Byte Helios mouse (config interface is
   # root-only hidraw by default). VID a8a4 = Helios (YJX-CHIP controller); a8a5
   # covers the dongle/BT variant. We grant via GROUP="users" + MODE 0660 (rahul

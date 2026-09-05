@@ -19,7 +19,6 @@
 
     # Fonts
     nerd-fonts.jetbrains-mono
-    mona-sans
 
     (google-fonts.override {
       fonts = [
