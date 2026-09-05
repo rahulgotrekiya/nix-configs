@@ -1,0 +1,27 @@
+name: flake check
+
+# Validates that the flake evaluates and both hosts build a valid config.
+# Eval-only (--no-build), so it is fast and needs no secrets: sops paths are
+# resolved at eval time, decryption only happens on the real machine.
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Nix (flakes enabled)
+        uses: DeterminateSystems/nix-installer-action@main
+
+      - name: Cache Nix store
+        uses: DeterminateSystems/magic-nix-cache-action@main
+
+      - name: nix flake check
+        run: nix flake check --no-build --show-trace

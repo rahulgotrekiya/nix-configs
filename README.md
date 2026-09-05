@@ -1,6 +1,8 @@
 <div align="center">
   <h1>❄️ NixOS Configs ❄️</h1>
   <p>Personal NixOS configuration for two machines: a laptop and a homelab server.</p>
+
+  [![flake check](https://github.com/rahulgotrekiya/nix-configs/actions/workflows/flake-check.yml/badge.svg)](https://github.com/rahulgotrekiya/nix-configs/actions/workflows/flake-check.yml)
 </div>
 
 Built with **Nix flakes**, **Home Manager** (integrated as a NixOS module), and
