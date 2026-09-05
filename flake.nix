@@ -23,7 +23,7 @@
   outputs = { nixpkgs, home-manager, nix-index-database, sops-nix, ... }:
     let
       system = "x86_64-linux";
-      lib    = nixpkgs.lib;
+      inherit (nixpkgs) lib;
 
       # Helper — define a host in one line.
       # hostname   → ./hosts/${hostname}

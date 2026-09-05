@@ -63,7 +63,7 @@ in
     certs."${domain}" = {
       dnsProvider = "cloudflare";
       environmentFile = config.sops.secrets."cloudflare/acme_env".path;
-      domain = domain;
+      inherit domain;
       extraDomainNames = [ "*.${domain}" ];
       group = "nginx";
     };

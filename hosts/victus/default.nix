@@ -8,8 +8,8 @@
     ../../modules/desktop/virtualisation.nix
     ../../modules/desktop/flatpak.nix
     ../../modules/desktop/kanata.nix
-    ../../modules/desktop/packet-tracer.nix
     ../../modules/desktop/lamp.nix
+    # ../../modules/desktop/packet-tracer.nix
     # DevOps toolchains — uncomment when needed
     # ../../modules/desktop/terraform.nix
     # ../../modules/desktop/ansible.nix
