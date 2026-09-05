@@ -1,5 +1,5 @@
-# HP Victus — laptop-specific NixOS configuration
-{ pkgs, username, ... }:
+# HP Victus laptop-specific NixOS configuration
+{ pkgs, lib, username, ... }:
 
 {
   imports = [
@@ -149,6 +149,18 @@
 
   # Firefox
   programs.firefox.enable = true;
+
+  # nh (nix-helper): nicer rebuilds with a pre-switch package diff, plus GC.
+  # Daily driver: `nh os switch` (replaces the nixos-rebuild + --flake typing).
+  programs.nh = {
+    enable = true;
+    flake  = "/home/${username}/dotfiles";
+    clean.enable    = true;
+    clean.extraArgs = "--keep 5 --keep-since 7d";
+  };
+  # nh clean owns garbage collection here, so turn off base.nix's automatic GC
+  # to avoid running two collectors (homelab keeps the base.nix GC).
+  nix.gc.automatic = lib.mkForce false;
 
   # System packages
   # Keep this minimal — user packages go in home/packages.nix via home-manager
