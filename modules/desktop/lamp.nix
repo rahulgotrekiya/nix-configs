@@ -1,4 +1,4 @@
-# LAMP stack — Apache + PHP + MariaDB + phpMyAdmin
+# LAMP stack - Apache + PHP + MariaDB + phpMyAdmin
 # Import this in any host that needs a local web development environment.
 { pkgs, ... }:
 

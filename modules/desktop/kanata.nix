@@ -17,7 +17,7 @@
       extraDefCfg = "process-unmapped-keys yes";
 
       config = ''
-        ;; Kanata — Home Row Mods · Navigation · Mouse · Caps Word
+        ;; Kanata - Home Row Mods / Navigation / Mouse / Caps Word
 
         ;; Source Keys
         (defsrc
@@ -50,7 +50,7 @@
           l-mod (tap-hold-release $tap-time $hold-time l ralt)
           ;-mod (tap-hold-release $tap-time $hold-time ; rmet)
 
-          ;; Caps Word — auto-disables after space/punctuation
+          ;; Caps Word - auto-disables after space/punctuation
           cw (caps-word 2000)
 
           ;; Space → tap: Space | hold: Mouse layer (temporary)
@@ -68,13 +68,13 @@
 
         ;; Mouse Aliases
         (defalias
-          ;; Precise movement — HJKL right hand (slow, fine)
+          ;; Precise movement - HJKL right hand (slow, fine)
           ms-l (movemouse-left  5 1)
           ms-d (movemouse-down  5 1)
           ms-u (movemouse-up    5 1)
           ms-r (movemouse-right 5 1)
 
-          ;; Accelerated movement — ESDF left hand (fast, coarse)
+          ;; Accelerated movement - ESDF left hand (fast, coarse)
           ms-al (movemouse-accel-left  1 1000 1 5)
           ms-ad (movemouse-accel-down  1 1000 1 5)
           ms-au (movemouse-accel-up    1 1000 1 5)
@@ -119,7 +119,7 @@
 
         ;; Layer: Mouse
         ;; Tab   Q    W    ↑Acc  RClk MClk  ScL  ScU  ScD  ScR  P
-        ;; Exit  LClk  ·   ↑Acc  RClk MClk   ←    ↓    ↑    →   ·   Exit
+        ;; Exit  LClk  /   ↑Acc  RClk MClk   ←    ↓    ↑    →   /   Exit
         ;; ←Acc ↓Acc →Acc        Precise HJKL
         ;; LClick(drag)
         (deflayer mouse

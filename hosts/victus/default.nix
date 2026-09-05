@@ -10,7 +10,7 @@
     ../../modules/desktop/kanata.nix
     ../../modules/desktop/lamp.nix
     # ../../modules/desktop/packet-tracer.nix
-    # DevOps toolchains — uncomment when needed
+    # DevOps toolchains - uncomment when needed
     # ../../modules/desktop/terraform.nix
     # ../../modules/desktop/ansible.nix
   ];
@@ -47,7 +47,7 @@
     resumeDevice = "/dev/disk/by-uuid/b19c406e-409c-4350-914d-772a1b62e88e";
   };
 
-  # Lid switch behavior — using hibernate instead of suspend
+  # Lid switch behavior - using hibernate instead of suspend
   # (HP Victus BIOS doesn't support S3 sleep properly with NVIDIA)
   services.logind.settings.Login = {
     HandleLidSwitch = "hibernate";
@@ -114,7 +114,7 @@
   };
 
   # HP Victus firmware
-  # SOF firmware — required for HP Victus audio (Intel HDA codec)
+  # SOF firmware - required for HP Victus audio (Intel HDA codec)
   hardware.firmware = with pkgs; [ sof-firmware ];
 
   # Printing
@@ -163,7 +163,7 @@
   nix.gc.automatic = lib.mkForce false;
 
   # System packages
-  # Keep this minimal — user packages go in home/packages.nix via home-manager
+  # Keep this minimal - user packages go in home/packages.nix via home-manager
   environment.systemPackages = with pkgs; [
     fastfetch
   ];

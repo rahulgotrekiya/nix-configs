@@ -48,17 +48,17 @@
       set-window-option -g pane-base-index 1
       set-option -g renumber-windows on
 
-      # Alt+arrow — switch pane without prefix
+      # Alt+arrow - switch pane without prefix
       bind -n M-Left  select-pane -L
       bind -n M-Right select-pane -R
       bind -n M-Up    select-pane -U
       bind -n M-Down  select-pane -D
 
-      # Shift+arrow — switch windows
+      # Shift+arrow - switch windows
       bind -n S-Left  previous-window
       bind -n S-Right next-window
 
-      # Shift+Alt+vim — switch windows
+      # Shift+Alt+vim - switch windows
       bind -n M-H previous-window
       bind -n M-L next-window
 

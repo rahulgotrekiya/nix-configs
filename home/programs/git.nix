@@ -16,7 +16,7 @@ _:
     };
   };
 
-  # delta — beautiful diffs (separate top-level program in this HM version)
+  # delta - beautiful diffs (separate top-level program in this HM version)
   programs.delta = {
     enable                = true;
     enableGitIntegration  = true;

@@ -1,4 +1,4 @@
-# Shared base config — applied to ALL hosts
+# Shared base config - applied to ALL hosts
 { pkgs, meta, ... }:
 
 {

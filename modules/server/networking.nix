@@ -69,7 +69,7 @@ in
     };
   };
 
-  # Nginx — Reverse proxy with SSL
+  # Nginx - Reverse proxy with SSL
   services.nginx = {
     enable = true;
     recommendedProxySettings = true;
@@ -79,7 +79,7 @@ in
     virtualHosts = nginxVhosts;
   };
 
-  # Blocky — DNS with ad blocking
+  # Blocky - DNS with ad blocking
   services.blocky = {
     enable = true;
     settings = {
@@ -108,11 +108,11 @@ in
     };
   };
 
-  # # WireGuard VPN — requires public IPv4 (CGNAT blocks this)
+  # # WireGuard VPN - requires public IPv4 (CGNAT blocks this)
   # # Use Tailscale instead.
   # networking.wireguard.interfaces.wg0 = { ... };
 
-  # Fail2ban — Intrusion prevention
+  # Fail2ban - Intrusion prevention
   services.fail2ban = {
     enable = true;
     maxretry = 5;

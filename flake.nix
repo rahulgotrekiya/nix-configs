@@ -25,7 +25,7 @@
       system = "x86_64-linux";
       inherit (nixpkgs) lib;
 
-      # Helper — define a host in one line.
+      # Helper - define a host in one line.
       # hostname   → ./hosts/${hostname}
       # user       → login user (threaded to modules + home-manager as `username`)
       # homeModule → home-manager entry (null = no home-manager, e.g. servers)

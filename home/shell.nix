@@ -41,7 +41,7 @@ in
   home.packages = with pkgs; [
     eza
     lazygit
-    fd       # fast find — fzf file/dir search
+    fd       # fast find - fzf file/dir search
     bat      # syntax-highlighted previews
   ];
 
@@ -62,17 +62,17 @@ in
 
     initContent = ''
       # Plugins (Nix store, no network)
-      # zsh-completions — extra fpath entries (before compinit)
+      # zsh-completions - extra fpath entries (before compinit)
       fpath+=(${pkgs.zsh-completions}/share/zsh/site-functions)
 
-      # fzf-tab     — must be after compinit, before other wrappers
+      # fzf-tab     - must be after compinit, before other wrappers
       source ${pkgs.zsh-fzf-tab}/share/fzf-tab/fzf-tab.plugin.zsh
       # autosuggestions
       source ${pkgs.zsh-autosuggestions}/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-      # syntax-highlighting — always last
+      # syntax-highlighting - always last
       source ${pkgs.zsh-syntax-highlighting}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
-      # fzf layout — set directly here so it always takes effect
+      # fzf layout - set directly here so it always takes effect
       export FZF_DEFAULT_OPTS='--layout=reverse --height=~10 --no-border'
 
       # Completion styling
@@ -100,7 +100,7 @@ in
       bindkey '^p' history-search-backward
       bindkey '^n' history-search-forward
 
-      # Word / line navigation — restores what oh-my-zsh used to bind
+      # Word / line navigation - restores what oh-my-zsh used to bind
       bindkey '^[[1;5C' forward-word        # Ctrl+Right
       bindkey '^[[1;5D' backward-word       # Ctrl+Left
       bindkey '^[[1;3C' forward-word        # Alt+Right
@@ -112,7 +112,7 @@ in
       bindkey '^[[3~'   delete-char         # Delete
       bindkey '^[[3;5~' kill-word           # Ctrl+Delete
       bindkey '^H'      backward-kill-word  # Ctrl+Backspace
-      # Esc Esc — prepend sudo to current command (replaces OMZ sudo plugin)
+      # Esc Esc - prepend sudo to current command (replaces OMZ sudo plugin)
       sudo-command-line() { [[ -z $BUFFER ]] && zle up-history; BUFFER="sudo $BUFFER"; zle end-of-line; }
       zle -N sudo-command-line
       bindkey '\e\e' sudo-command-line

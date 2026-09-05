@@ -1,4 +1,4 @@
-# NVIDIA hybrid graphics — HP Victus (Intel + RTX 2050)
+# NVIDIA hybrid graphics - HP Victus (Intel + RTX 2050)
 # Uses PRIME offload mode: Intel runs the desktop, NVIDIA only when explicitly used
 { config, pkgs, ... }:
 
@@ -22,23 +22,23 @@
     modesetting.enable = true;
     nvidiaSettings     = true;
 
-    # Open kernel module — RTX 2050 is Ampere (GA107), fully supported
+    # Open kernel module - RTX 2050 is Ampere (GA107), fully supported
     open = true;
 
-    # Power management — keeps GPU state across suspend
+    # Power management - keeps GPU state across suspend
     powerManagement = {
       enable = true;
       # finegrained = true;  # Uncomment if you want NVIDIA to fully power off
-                             # when idle — can cause issues on some laptops
+                             # when idle - can cause issues on some laptops
     };
 
     # Keep NVIDIA driver loaded to prevent VRAM state loss on resume
     nvidiaPersistenced = true;
 
-    # Driver version — stable is safest for RTX 2050
+    # Driver version - stable is safest for RTX 2050
     package = config.boot.kernelPackages.nvidiaPackages.stable;
 
-    # PRIME — offload mode: Intel = default, NVIDIA = on demand via prime-run
+    # PRIME - offload mode: Intel = default, NVIDIA = on demand via prime-run
     prime = {
       offload = {
         enable          = true;
@@ -51,7 +51,7 @@
   };
 
   # Session environment variables
-  # NOTE: Do NOT set GBM_BACKEND or __GLX_VENDOR_LIBRARY_NAME globally —
+  # NOTE: Do NOT set GBM_BACKEND or __GLX_VENDOR_LIBRARY_NAME globally -
   # those force all rendering through NVIDIA and break PRIME offload + reverse sync.
   # They are set per-app via the prime-run wrapper below.
   environment.sessionVariables = {

@@ -59,7 +59,7 @@
     };
   };
 
-  # 4. Firewall — 4096 public; aria2 RPC (6800) only reachable from Docker bridge
+  # 4. Firewall - 4096 public; aria2 RPC (6800) only reachable from Docker bridge
   networking.firewall.allowedTCPPorts = [ 4096 ];
   networking.firewall.interfaces."docker0".allowedTCPPorts = [ 6800 ];
 }

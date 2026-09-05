@@ -16,7 +16,7 @@
 
   programs.home-manager.enable = true;
 
-  # comma — run any nixpkgs binary without installing it
+  # comma - run any nixpkgs binary without installing it
   # Usage: , cowsay hello   , htop   , neofetch
   programs.nix-index-database.comma.enable = true;
 }

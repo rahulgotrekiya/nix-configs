@@ -4,7 +4,7 @@
 {
   environment.systemPackages = with pkgs; [
     terraform   # core IaC tool
-    tflint      # linter — validates .tf against best-practice rules
+    tflint      # linter - validates .tf against best-practice rules
     infracost   # cost estimation before apply
   ];
 

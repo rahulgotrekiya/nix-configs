@@ -30,7 +30,7 @@
     AllowSuspendThenHibernate = "no";
   };
 
-  # Tailscale — enabled here (base.nix stays minimal for the laptop) and set up
+  # Tailscale - enabled here (base.nix stays minimal for the laptop) and set up
   # as an exit node / subnet router
   services.tailscale.enable = true;
   services.tailscale.useRoutingFeatures = "server";
@@ -77,7 +77,7 @@
     nfs-utils
     docker-compose
 
-    # sops tools — for managing this host's encrypted secrets
+    # sops tools - for managing this host's encrypted secrets
     sops
     age
     ssh-to-age

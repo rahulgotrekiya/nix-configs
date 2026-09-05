@@ -4,7 +4,7 @@
 {
   environment.systemPackages = with pkgs; [
     ansible       # core config-management tool
-    ansible-lint  # linter — checks playbooks for best-practice violations
+    ansible-lint  # linter - checks playbooks for best-practice violations
   ];
 
   environment.shellAliases = {
