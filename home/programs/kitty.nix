@@ -26,33 +26,33 @@ in
     
     # Tokyo Night theme
     extraConfig = ''
-      foreground #a9b1d6
-      background #1a1b26
-      cursor #a9b1d6
-      
-      color0 #1a1b26
-      color8 #4e5173
-      
-      color1 #F7768E
-      color9 #F7768E
-      
-      color2 #9ECE6A
-      color10 #9ECE6A
-      
-      color3 #E0AF68
-      color11 #E0AF68
-      
-      color4 #7AA2F7
-      color12 #7AA2F7
-      
-      color5 #9a7ecc
-      color13 #9a7ecc
-      
-      color6 #4abaaf
-      color14 #4abaaf
-      
-      color7 #acb0d0
-      color15 #acb0d0
+      foreground ${colors.fg}
+      background ${colors.bg}
+      cursor ${colors.fg}
+
+      color0 ${colors.bg}
+      color8 ${colors.brightBlack}
+
+      color1 ${colors.red}
+      color9 ${colors.red}
+
+      color2 ${colors.green}
+      color10 ${colors.green}
+
+      color3 ${colors.yellow}
+      color11 ${colors.yellow}
+
+      color4 ${colors.blue}
+      color12 ${colors.blue}
+
+      color5 ${colors.magenta}
+      color13 ${colors.magenta}
+
+      color6 ${colors.cyan}
+      color14 ${colors.cyan}
+
+      color7 ${colors.brightWhite}
+      color15 ${colors.brightWhite}
     '';
   };
 }

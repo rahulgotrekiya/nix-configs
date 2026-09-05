@@ -1,5 +1,8 @@
 { pkgs, ... }:
 
+let
+  colors = import ../themes/colors.nix;
+in
 {
   programs.alacritty = {
     enable = true;
@@ -47,32 +50,32 @@
       colors = {
         draw_bold_text_with_bright_colors = false;
         primary = {
-          background = "#1a1b26";
-          foreground = "#a9b1d6";
+          background = colors.bg;
+          foreground = colors.fg;
         };
         cursor = {
           text   = "#1E1E2E";
           cursor = "#F5E0DC";
         };
         normal = {
-          black   = "#32344a";
-          red     = "#f7768e";
-          green   = "#9ece6a";
-          yellow  = "#e0af68";
-          blue    = "#7aa2f7";
-          magenta = "#ad8ee6";
-          cyan    = "#449dab";
-          white   = "#787c99";
+          black   = colors.black;
+          red     = colors.red;
+          green   = colors.green;
+          yellow  = colors.yellow;
+          blue    = colors.blue;
+          magenta = colors.magenta;
+          cyan    = colors.cyan;
+          white   = colors.white;
         };
         bright = {
-          black   = "#444b6a";
-          red     = "#ff7a93";
-          green   = "#b9f27c";
-          yellow  = "#ff9e64";
-          blue    = "#7da6ff";
-          magenta = "#bb9af7";
-          cyan    = "#0db9d7";
-          white   = "#acb0d0";
+          black   = colors.brightBlack;
+          red     = colors.brightRed;
+          green   = colors.brightGreen;
+          yellow  = colors.brightYellow;
+          blue    = colors.brightBlue;
+          magenta = colors.brightMagenta;
+          cyan    = colors.brightCyan;
+          white   = colors.brightWhite;
         };
       };
     };

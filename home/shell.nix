@@ -1,6 +1,7 @@
 { config, pkgs, ... }:
 
 let
+  colors = import ./themes/colors.nix;
   myAliases = {
     # Editor
     v  = "nvim";
@@ -152,17 +153,17 @@ in
 
     # Tokyo Night colours
     colors = {
-      "fg"      = "#c0caf5";
-      "fg+"     = "#c0caf5";
-      "bg+"     = "#1a1b26";
-      "hl"      = "#7aa2f7";
-      "hl+"     = "#7dcfff";
-      "info"    = "#7aa2f7";
-      "prompt"  = "#7aa2f7";
-      "pointer" = "#bb9af7";
-      "marker"  = "#9ece6a";
-      "spinner" = "#bb9af7";
-      "header"  = "#565f89";
+      "fg"      = colors.fgBright;
+      "fg+"     = colors.fgBright;
+      "bg+"     = colors.bg;
+      "hl"      = colors.blue;
+      "hl+"     = colors.cyanLight;
+      "info"    = colors.blue;
+      "prompt"  = colors.blue;
+      "pointer" = colors.brightMagenta;
+      "marker"  = colors.green;
+      "spinner" = colors.brightMagenta;
+      "header"  = colors.comment;
     };
   };
 
