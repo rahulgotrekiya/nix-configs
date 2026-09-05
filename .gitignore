@@ -20,3 +20,4 @@ secrets/**/*.plain.yaml
 .env
 .env.*
 
+result

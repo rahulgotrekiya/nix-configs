@@ -8,6 +8,20 @@ Built with **Nix flakes**, **Home Manager** (integrated as a NixOS module), and
 
 ---
 
+## 🧰 What this demonstrates
+
+A complete, reproducible infrastructure managed as code from one repository.
+
+- **Infrastructure as Code:** the full OS, packages, and services are declarative and version-controlled (NixOS flakes).
+- **Secrets management:** age-encrypted secrets with sops-nix, safe to keep in a public repo.
+- **Reverse proxy + TLS:** nginx with automated Let's Encrypt wildcard certs (Cloudflare DNS-01), vhosts generated from a single service-to-port map.
+- **Observability:** Prometheus, Grafana, and Uptime Kuma.
+- **Containers:** Docker services managed declaratively, auto-updated with Watchtower.
+- **Networking:** Blocky DNS with ad-blocking, Tailscale mesh VPN, Cloudflare Tunnel, fail2ban.
+- **Reproducibility:** a pinned `flake.lock` builds an identical system on every machine.
+
+---
+
 ## 🖥️ Machines
 
 | Host | Machine | CPU | GPU | Role |
@@ -17,6 +31,60 @@ Built with **Nix flakes**, **Home Manager** (integrated as a NixOS module), and
 
 > **Branches:** `master` is the current setup above. The old **Hyprland** rice is kept
 > on the [`hyprland`](../../tree/hyprland) branch.
+
+---
+
+## 🗺️ Architecture
+
+**How the repo wires up.** One flake, one `mkHost` helper, two machines:
+
+```mermaid
+flowchart TD
+    F["flake.nix<br/>mkHost helper"]
+    F --> BASE["modules/base.nix<br/>(shared by all hosts)"]
+    F --> SOPS["sops-nix<br/>(encrypted secrets)"]
+
+    F --> V["victus<br/>(laptop)"]
+    F --> H["homelab<br/>(server)"]
+
+    V --> HM["home/<br/>Home Manager:<br/>shell, git, terminals"]
+    V --> DESK["modules/desktop/<br/>nvidia, kanata,<br/>lamp, virtualisation"]
+
+    H --> SRV["modules/server/<br/>docker, media, monitoring,<br/>networking, immich, ..."]
+```
+
+**How a request reaches a homelab service.** Everything enters through one reverse proxy:
+
+```mermaid
+flowchart LR
+    USER["User<br/>*.gotrekiya.site"]
+    USER -->|remote| CF["Cloudflare Tunnel"]
+    USER -->|LAN| DNS["Blocky DNS<br/>(adblock)"]
+
+    CF --> NGINX
+    DNS --> NGINX
+
+    NGINX["nginx<br/>reverse proxy + TLS"]
+    NGINX --> JELLY["Jellyfin"]
+    NGINX --> ARR["*arr stack"]
+    NGINX --> IMM["Immich"]
+    NGINX --> GRAF["Grafana"]
+    NGINX --> GLANCE["Glance"]
+
+    PROM["Prometheus"] --> GRAF
+    TS["Tailscale mesh"] -.admin access.-> NGINX
+```
+
+---
+
+## 📸 Screenshots
+
+<!-- Replace these with real screenshots once captured. GitHub renders them from a
+     committed path (e.g. docs/images/) or a pasted-in upload URL. -->
+
+| Desktop (GNOME) | Glance dashboard | Grafana |
+|---|---|---|
+| _screenshot_ | _screenshot_ | _screenshot_ |
 
 ---
 
