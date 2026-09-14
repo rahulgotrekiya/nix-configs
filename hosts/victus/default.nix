@@ -150,6 +150,12 @@
   # Firefox
   programs.firefox.enable = true;
 
+  # Tailscale (VPN mesh) - reach the homelab and, via its subnet routes, the home LAN
+  services.tailscale = {
+    enable = true;
+    useRoutingFeatures = "client";   # accept the homelab's advertised routes / exit node
+  };
+
   # nh (nix-helper): nicer rebuilds with a pre-switch package diff, plus GC.
   # Daily driver: `nh os switch` (replaces the nixos-rebuild + --flake typing).
   programs.nh = {
