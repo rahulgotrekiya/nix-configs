@@ -42,6 +42,7 @@ in
     eza
     lazygit
     fd       # fast find - fzf file/dir search
+    ripgrep  # fast recursive search (rg)
     bat      # syntax-highlighted previews
   ];
 
