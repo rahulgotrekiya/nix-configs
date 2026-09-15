@@ -44,6 +44,7 @@ in
     fd       # fast find - fzf file/dir search
     ripgrep  # fast recursive search (rg)
     bat      # syntax-highlighted previews
+    tldr     # simplified, example-based man pages
   ];
 
   programs.bash = {
