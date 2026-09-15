@@ -38,6 +38,7 @@
       "nvidia.NVreg_PreserveVideoMemoryAllocations=1"
       "nvidia.NVreg_EnableS0ixPowerManagement=1"
       "nvidia-drm.fbdev=1"                              # enable dGPU framebuffer for HDMI output
+      "acpi_sleep=s4_nohwsig"                           # skip hibernate hardware-signature check (HP firmware false alarm)
     ];
 
     # Required for KVM virtualisation
