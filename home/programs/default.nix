@@ -7,5 +7,6 @@
     ./alacritty.nix
     ./kitty.nix
     ./neovim.nix
+    ./direnv.nix
   ];
 }

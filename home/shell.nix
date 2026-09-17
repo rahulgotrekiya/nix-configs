@@ -140,12 +140,49 @@ in
       zle -N edit-command-line
       bindkey '^X^E' edit-command-line
 
+      # Magic space: expand history (!!, !$, !name) as soon as you press space
+      bindkey ' ' magic-space
+
       # Don't highlight pasted text (removes the yellow paste highlight)
       zle_highlight+=(paste:none)
       # Esc Esc - prepend sudo to current command (replaces OMZ sudo plugin)
       sudo-command-line() { [[ -z $BUFFER ]] && zle up-history; BUFFER="sudo $BUFFER"; zle end-of-line; }
       zle -N sudo-command-line
       bindkey '\e\e' sudo-command-line
+
+      # Suffix aliases: open a file by extension just by typing its name
+      alias -s {md,txt,log}=bat   # README.md -> bat README.md
+      alias -s html=xdg-open      # page.html -> open in browser
+
+      # zmv: batch rename/move with patterns, e.g. zmv '(*).jpeg' '$1.jpg'
+      # ('-n' first for a dry run). zcp copies, zln links.
+      autoload -Uz zmv
+      alias zcp='zmv -C'
+      alias zln='zmv -L'
+
+      # Ctrl+X l: clear screen AND scrollback, keeping the typed command
+      clear-screen-and-scrollback() {
+        echoti civis >"$TTY"
+        printf '%b' '\e[H\e[2J\e[3J' >"$TTY"
+        echoti cnorm >"$TTY"
+        zle redisplay
+      }
+      zle -N clear-screen-and-scrollback
+      bindkey '^Xl' clear-screen-and-scrollback
+
+      # Ctrl+X c: copy the current command line to the clipboard
+      copy-buffer-to-clipboard() {
+        print -rn -- "$BUFFER" | wl-copy
+        zle -M "Copied to clipboard"
+      }
+      zle -N copy-buffer-to-clipboard
+      bindkey '^Xc' copy-buffer-to-clipboard
+
+      # Git snippet hotkeys (press Ctrl+X, then g, then a letter)
+      bindkey -s '^Xgc' 'git commit -m ""\C-b'      # cursor lands inside the quotes
+      bindkey -s '^Xgp' 'git push origin '
+      bindkey -s '^Xgs' 'git status\n'
+      bindkey -s '^Xgl' 'git log --oneline -n 10\n'
 
       # History options
       setopt appendhistory
