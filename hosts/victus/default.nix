@@ -9,6 +9,7 @@
     ../../modules/desktop/flatpak.nix
     ../../modules/desktop/kanata.nix
     ../../modules/desktop/lamp.nix
+    ../../modules/desktop/docker.nix
     # ../../modules/desktop/packet-tracer.nix
     # DevOps toolchains - uncomment when needed
     # ../../modules/desktop/terraform.nix
