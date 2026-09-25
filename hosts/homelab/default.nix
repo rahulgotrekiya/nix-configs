@@ -38,9 +38,15 @@
   # Console
   console.font = "Lat2-Terminus16";
 
+  # Shell - enable zsh at system level alongside home-manager's programs.zsh,
+  # so the plugins (syntax-highlighting, autosuggestions, fzf-tab) load on login
+  programs.zsh.enable = true;
+  environment.shells  = with pkgs; [ zsh ];
+
   # User account
   users.users.neo = {
     isNormalUser = true;
+    shell = pkgs.zsh;
     extraGroups = [ "wheel" "docker" "networkmanager" ];
     packages = with pkgs; [ tree ];
     hashedPasswordFile = config.sops.secrets."neo_user/hashed_password".path;
