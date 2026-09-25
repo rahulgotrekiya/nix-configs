@@ -94,6 +94,17 @@ final_space = true
     style      = 'plain'
 
   [[blocks.segments]]
+    template   = '{{ .HostName }} '
+    background = 'transparent'
+    type       = 'session'
+    style      = 'plain'
+    foreground = 'p:purple'
+    # homelab stands out in red so you never mistake it for the laptop
+    foreground_templates = [
+      '{{ if eq .HostName "homelab" }}p:red{{ end }}',
+    ]
+
+  [[blocks.segments]]
     template   = ' {{ .FormattedMs }}'
     foreground = 'p:yellow'
     background = 'transparent'
