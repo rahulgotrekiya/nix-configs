@@ -1,13 +1,13 @@
-{ pkgs, ... }:
+{ pkgs, lib, desktop, ... }:
 
 {
   home.packages = with pkgs; [
-    # Password manager
+    # Password manager (CLI - useful everywhere)
     pass
     gnupg
     pinentry-tty
-
-    # Other
+  ] ++ lib.optionals desktop [
+    # GUI apps / dev tooling - laptop only
     obsidian
     gnome-tweaks
 
@@ -17,7 +17,7 @@
     nodejs # required by claude-code plugins (e.g. ponytail) whose hooks run `node`
     google-chrome
 
-    # Fonts
+    # Fonts (rendered client-side over SSH, so not needed on the server)
     nerd-fonts.jetbrains-mono
 
     (google-fonts.override {
@@ -28,8 +28,8 @@
     })
   ];
 
-  # Refresh font cache after install
-  fonts.fontconfig.enable = true;
+  # Refresh font cache after install (only where fonts are installed)
+  fonts.fontconfig.enable = desktop;
 
   # gpg-agent
   programs.gpg.enable = true;

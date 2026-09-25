@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, desktop, ... }:
 
 let
   colors = import ./themes/colors.nix;
@@ -31,9 +31,10 @@ let
     # Safer defaults
     mkdir = "mkdir -p";
 
-    # NixOS rebuild shortcuts (home-manager rebuilds together with the system)
-    nrs = "sudo nixos-rebuild switch --flake ~/dotfiles#victus";
-    nrb = "sudo nixos-rebuild boot   --flake ~/dotfiles#victus";
+    # NixOS rebuild shortcuts (no #host: nixos-rebuild auto-selects the config
+    # matching this machine's hostname, so this works on every host)
+    nrs = "sudo nixos-rebuild switch --flake ~/dotfiles";
+    nrb = "sudo nixos-rebuild boot   --flake ~/dotfiles";
   };
 in
 
@@ -87,7 +88,6 @@ in
       alias -g G='| grep'              # foo G bar
       alias -g L='| less'              # foo L
       alias -g JQ='| jq'               # curl ... JQ
-      alias -g C='| wl-copy'           # foo C    -> copy output to clipboard
 
       # Completion styling
       zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
@@ -152,7 +152,6 @@ in
 
       # Suffix aliases: open a file by extension just by typing its name
       alias -s {md,txt,log}=bat   # README.md -> bat README.md
-      alias -s html=xdg-open      # page.html -> open in browser
 
       # zmv: batch rename/move with patterns, e.g. zmv '(*).jpeg' '$1.jpg'
       # ('-n' first for a dry run). zcp copies, zln links.
@@ -170,14 +169,6 @@ in
       zle -N clear-screen-and-scrollback
       bindkey '^Xl' clear-screen-and-scrollback
 
-      # Ctrl+X c: copy the current command line to the clipboard
-      copy-buffer-to-clipboard() {
-        print -rn -- "$BUFFER" | wl-copy
-        zle -M "Copied to clipboard"
-      }
-      zle -N copy-buffer-to-clipboard
-      bindkey '^Xc' copy-buffer-to-clipboard
-
       # Git snippet hotkeys (press Ctrl+X, then g, then a letter)
       bindkey -s '^Xgc' 'git commit -m ""\C-b'      # cursor lands inside the quotes
       bindkey -s '^Xgp' 'git push origin '
@@ -191,6 +182,22 @@ in
       setopt hist_ignore_all_dups
       setopt hist_save_no_dups
       setopt hist_find_no_dups
+    '' + lib.optionalString desktop ''
+
+      # --- Desktop-only: Wayland clipboard + browser (laptop) ---
+      # Global alias: copy output to clipboard, e.g. `foo C`
+      alias -g C='| wl-copy'
+
+      # Suffix alias: open an .html file in the browser just by typing its name
+      alias -s html=xdg-open
+
+      # Ctrl+X c: copy the current command line to the clipboard
+      copy-buffer-to-clipboard() {
+        print -rn -- "$BUFFER" | wl-copy
+        zle -M "Copied to clipboard"
+      }
+      zle -N copy-buffer-to-clipboard
+      bindkey '^Xc' copy-buffer-to-clipboard
     '';
   };
 

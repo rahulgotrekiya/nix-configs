@@ -30,7 +30,7 @@
       # user       → login user (threaded to modules + home-manager as `username`)
       # homeModule → home-manager entry (null = no home-manager, e.g. servers)
       # extraModules → opt-in feature modules (server services, etc.)
-      mkHost = { hostname, user ? "rahul", homeModule ? null, extraModules ? [] }:
+      mkHost = { hostname, user ? "rahul", homeModule ? null, desktop ? false, extraModules ? [] }:
         lib.nixosSystem {
           inherit system;
           specialArgs = { meta = { inherit hostname; }; username = user; };
@@ -45,7 +45,7 @@
               home-manager.useGlobalPkgs       = true;
               home-manager.useUserPackages     = true;
               home-manager.backupFileExtension = "backup";
-              home-manager.extraSpecialArgs    = { username = user; };
+              home-manager.extraSpecialArgs    = { username = user; inherit desktop; };
               home-manager.users.${user}       = import homeModule;
               home-manager.sharedModules       = [
                 nix-index-database.homeModules.nix-index
@@ -61,12 +61,14 @@
           hostname   = "victus";
           user       = "rahul";
           homeModule = ./home;
+          desktop    = true;
         };
 
         # Homelab (HP ENVY x360 repurposed as a server)
         homelab = mkHost {
           hostname     = "homelab";
           user         = "neo";
+          homeModule   = ./home;   # shared shell/CLI env; desktop=false skips GUI bits
           extraModules = [
             ./modules/server/docker.nix
             ./modules/server/media-server.nix
