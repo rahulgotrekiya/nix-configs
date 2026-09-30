@@ -12,10 +12,11 @@ let
   hostChip = {
     type       = "session";
     style      = "plain";
-    template   = " {{ .HostName }} ";
-    foreground = "p:white";
-    background = "p:blue";
-    background_templates = [ ''{{ if eq .HostName "homelab" }}p:red{{ end }}'' ];
+    background = "transparent";
+    template   = "{{ .HostName }} ";
+    foreground = "fore";
+    # homelab in red so the server never gets mistaken for the laptop
+    foreground_templates = [ ''{{ if eq .HostName "homelab" }}p:red{{ end }}'' ];
   };
   ompSettings =
     if hostBadge then
