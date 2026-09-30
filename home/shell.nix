@@ -1,7 +1,31 @@
-{ config, pkgs, lib, desktop, ... }:
+{ config, pkgs, lib, desktop, hostBadge, ... }:
 
 let
   colors = import ./themes/colors.nix;
+
+  # oh-my-posh: parse the theme, then optionally prepend a hostname chip to the
+  # first (left) prompt block. Filled block, white text; red on homelab so the
+  # server never gets mistaken for the laptop.
+  ompBase = builtins.fromTOML (
+    builtins.unsafeDiscardStringContext (builtins.readFile ./themes/ohmyposh.toml)
+  );
+  hostChip = {
+    type       = "session";
+    style      = "plain";
+    template   = " {{ .HostName }} ";
+    foreground = "p:white";
+    background = "p:blue";
+    background_templates = [ ''{{ if eq .HostName "homelab" }}p:red{{ end }}'' ];
+  };
+  ompSettings =
+    if hostBadge then
+      let first = builtins.head ompBase.blocks;
+      in ompBase // {
+        blocks = [ (first // { segments = [ hostChip ] ++ first.segments; }) ]
+                 ++ builtins.tail ompBase.blocks;
+      }
+    else ompBase;
+
   myAliases = {
     # Editor
     v  = "nvim";
@@ -253,10 +277,6 @@ in
     enable                = true;
     enableZshIntegration  = true;
     enableBashIntegration = true;
-    settings = builtins.fromTOML (
-      builtins.unsafeDiscardStringContext (
-        builtins.readFile ./themes/ohmyposh.toml
-      )
-    );
+    settings = ompSettings;
   };
 }
