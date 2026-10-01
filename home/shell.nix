@@ -15,8 +15,9 @@ let
     background = "transparent";
     template   = "{{ .HostName }} ";
     foreground = "fore";
-    # homelab in red so the server never gets mistaken for the laptop
-    foreground_templates = [ ''{{ if eq .HostName "homelab" }}p:red{{ end }}'' ];
+    # homelab in ANSI bright red (color 9, the terminal's own bright red) so the
+    # server never gets mistaken for the laptop. "9" => ANSI index, not the #FF5C57 hex.
+    foreground_templates = [ ''{{ if eq .HostName "homelab" }}9{{ end }}'' ];
   };
   ompSettings =
     if hostBadge then
