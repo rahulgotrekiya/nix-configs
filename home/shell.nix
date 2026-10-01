@@ -107,6 +107,11 @@ in
       # Point GPG at the current terminal so pinentry can prompt (used by pass/git signing)
       export GPG_TTY=$(tty)
 
+      # Advertise truecolor so oh-my-posh emits exact hex colors even over SSH
+      # (SSH doesn't forward COLORTERM, so without this the prompt red downgrades
+      # to the terminal's harsh ANSI red). Our terminals all render truecolor.
+      export COLORTERM=truecolor
+
       # Global aliases: expand anywhere in the command line, not just at the start
       alias -g NE='2>/dev/null'        # foo NE   -> hide stderr
       alias -g NUL='>/dev/null 2>&1'   # foo NUL  -> hide all output
